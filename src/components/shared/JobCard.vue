@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { JobProps } from "@/types/JobType";
+import type { IJob } from "@/types/JobType";
 import { BsBuilding } from "vue-icons-plus/bs";
 import { Fa6LocationDot } from "vue-icons-plus/fa6";
 import { PiMoneyWavyBold } from "vue-icons-plus/pi";
 
 // Mendefinisikan props dengan default value
 const props = defineProps<{
-	job: JobProps;
+	job: IJob;
 }>();
 
 // Mendefinisikan emit untuk aksi tombol
@@ -34,7 +34,7 @@ const emit = defineEmits(["view-details", "apply"]);
 					</h4>
 					<span
 						class="items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-200 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-						{{ job.type }}
+						{{ job.jobType }}
 					</span>
 				</div>
 
@@ -56,14 +56,14 @@ const emit = defineEmits(["view-details", "apply"]);
 						<span class="material-symbols-outlined text-sm"
 							><PiMoneyWavyBold
 						/></span>
-						<span>{{ job.salary }}</span>
+						<span>{{ job.salaryMin }} - {{ job.salaryMax }}</span>
 					</div>
 				</div>
 
 				<div
 					class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
 					<span class="text-xs text-slate-400 italic">
-						Posted {{ job.postedAt }}
+						Posted {{ job.createdAt }}
 					</span>
 					<div class="flex items-center gap-3">
 						<button

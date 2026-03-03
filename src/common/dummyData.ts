@@ -1,4 +1,6 @@
-import type { Company, User } from "@/types/UserType";
+import type { IApplication } from "@/types/ApplicationType";
+import type { IJob } from "@/types/JobType";
+import type { Company, IUser } from "@/types/UserType";
 
 export const jobsDummy = [
 	{
@@ -113,11 +115,154 @@ export const dummyCompanies: Company[] = [
 ];
 
 // Data User yang sudah login (Mock Auth State)
-export const currentUser: User = {
+export const currentUser: IUser = {
 	id: "user-001",
+	name: "HR Manager TechCorp",
 	email: "hr.manager@techcorp.com",
-	fullName: "Budi Raharjo",
-	role: "employer",
-	avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Budi",
-	companyId: "comp-101", // User ini admin dari TechCorp
+	role: "hrd",
+	createdAt: new Date("2024-01-01T00:00:00Z"),
 };
+
+export const dummyUsers: IUser[] = [
+	{
+		id: "u1",
+		email: "hrd1@company.com",
+		name: "Budi HR",
+		role: "hrd",
+		createdAt: new Date("2026-01-01"),
+	},
+	{
+		id: "u2",
+		email: "hrd2@startup.com",
+		name: "Sari HR",
+		role: "hrd",
+		createdAt: new Date("2026-01-02"),
+	},
+	{
+		id: "u3",
+		email: "andi@mail.com",
+		name: "Andi Saputra",
+		role: "applicant",
+		createdAt: new Date("2026-01-03"),
+	},
+	{
+		id: "u4",
+		email: "rina@mail.com",
+		name: "Rina Putri",
+		role: "applicant",
+		createdAt: new Date("2026-01-04"),
+	},
+	{
+		id: "u5",
+		email: "fajar@mail.com",
+		name: "Fajar Nugraha",
+		role: "applicant",
+		createdAt: new Date("2026-01-05"),
+	},
+];
+
+export const dummyJobs: IJob[] = [
+	{
+		id: "j1",
+		title: "Frontend Vue Developer",
+		description: "Mengembangkan dashboard menggunakan Vue 3.",
+		location: "Makassar",
+		salaryMin: 6000000,
+		salaryMax: 9000000,
+		jobType: "full-time",
+		createdBy: "u1",
+		createdAt: new Date("2026-02-01"),
+		companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
+		companyName: "TechCorp Solutions",
+	},
+	{
+		id: "j2",
+		title: "Backend Node.js Developer",
+		description: "Membangun REST API dan integrasi Firebase.",
+		location: "Jakarta",
+		salaryMin: 7000000,
+		salaryMax: 10000000,
+		jobType: "full-time",
+		createdBy: "u2",
+		createdAt: new Date("2026-02-02"),
+		companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=CP",
+		companyName: "Creative Pixel Studio",
+	},
+	{
+		id: "j3",
+		title: "UI/UX Designer",
+		description: "Mendesain tampilan aplikasi job portal.",
+		location: "Remote",
+		salaryMin: 5000000,
+		salaryMax: 8000000,
+		jobType: "contract",
+		createdBy: "u1",
+		createdAt: new Date("2026-02-03"),
+		companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
+		companyName: "TechCorp Solutions",
+	},
+	{
+		id: "j4",
+		title: "Digital Marketing Specialist",
+		description: "Mengelola campaign dan SEO.",
+		location: "Bandung",
+		salaryMin: 4000000,
+		salaryMax: 7000000,
+		jobType: "full-time",
+		createdBy: "u2",
+		createdAt: new Date("2026-02-04"),
+		companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=CP",
+		companyName: "Creative Pixel Studio",
+	},
+	{
+		id: "j5",
+		title: "Mobile App Developer",
+		description: "Mengembangkan aplikasi mobile menggunakan Flutter.",
+		location: "Surabaya",
+		salaryMin: 6500000,
+		salaryMax: 9500000,
+		jobType: "full-time",
+		createdBy: "u1",
+		createdAt: new Date("2026-02-05"),
+		companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
+		companyName: "TechCorp Solutions",
+	},
+];
+
+export const dummyApplications: IApplication[] = [
+	{
+		id: "a1",
+		jobId: "j1",
+		applicantId: "u3",
+		status: "pending",
+		appliedAt: new Date("2026-02-10"),
+	},
+	{
+		id: "a2",
+		jobId: "j1",
+		applicantId: "u4",
+		status: "accepted",
+		appliedAt: new Date("2026-02-11"),
+	},
+	{
+		id: "a3",
+		jobId: "j2",
+		applicantId: "u5",
+		status: "rejected",
+		appliedAt: new Date("2026-02-12"),
+	},
+	{
+		id: "a4",
+		jobId: "j3",
+		applicantId: "u3",
+		status: "pending",
+		appliedAt: new Date("2026-02-13"),
+	},
+	{
+		id: "a5",
+		jobId: "j4",
+		applicantId: "u4",
+		status: "pending",
+		appliedAt: new Date("2026-02-14"),
+	},
+];

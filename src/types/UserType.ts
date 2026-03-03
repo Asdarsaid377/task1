@@ -1,14 +1,14 @@
 // Role untuk membatasi akses
-export type UserRole = "employer" | "admin" | "candidate";
 
 // Data Dasar User (Akun Login)
-export interface User {
-	id: string;
+export type UserRole = "hrd" | "applicant";
+
+export interface IUser {
+	id: string; // uid
 	email: string;
-	fullName: string;
+	name: string;
 	role: UserRole;
-	avatarUrl?: string;
-	companyId?: string; // Terhubung ke perusahaan jika role-nya 'employer'
+	createdAt: Date;
 }
 
 // Data Profil Perusahaan

@@ -1,41 +1,26 @@
-// import { defineStore } from "pinia";
-// import axios from "axios";
+import { defineStore } from "pinia";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
-// export const useAuthStore = defineStore("auth", {
-// 	state: () => ({
-// 		user: null,
-// 		token: null,
-// 		loading: false,
-// 		error: null,
-// 	}),
+export const useAuthStore = defineStore("auth", {
+	state: () => ({
+		user: null as any,
+		loading: false,
+	}),
 
-// 	getters: {
-// 		isAuthenticated: (state) => !!state.token,
-// 	},
+	actions: {
+		init() {
+			onAuthStateChanged(auth, (user) => {
+				this.user = user;
+			});
+		},
 
-// 	actions: {
-// 		async login(payload) {
-// 			this.loading = true;
-// 			this.error = null;
+		setLoading(value: boolean) {
+			this.loading = value;
+		},
+	},
 
-// 			try {
-// 				const response = await axios.post("/api/login", payload);
-
-// 				this.token = response.data.token;
-// 				this.user = response.data.user;
-
-// 				localStorage.setItem("token", this.token);
-// 			} catch (err) {
-// 				this.error = err.response?.data?.message || "Login failed";
-// 			} finally {
-// 				this.loading = false;
-// 			}
-// 		},
-
-// 		logout() {
-// 			this.user = null;
-// 			this.token = null;
-// 			localStorage.removeItem("token");
-// 		},
-// 	},
-// });
+	getters: {
+		isAuthenticated: (state) => !!state.user,
+	},
+});

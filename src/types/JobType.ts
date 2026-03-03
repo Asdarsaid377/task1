@@ -1,10 +1,15 @@
-export type JobProps = {
-	id: string | number;
+export type JobType = "full-time" | "part-time" | "contract";
+
+export interface IJob {
+	id: string;
 	title: string;
-	companyName: string;
-	companyLogo: string;
+	description: string;
 	location: string;
-	salary: string;
-	type: string; // Contoh enum sederhana
-	postedAt: string;
-};
+	salaryMin: number;
+	salaryMax: number;
+	jobType: JobType;
+	companyLogo: string;
+	companyName: string;
+	createdBy: string; // uid HRD
+	createdAt: Date;
+}

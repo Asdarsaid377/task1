@@ -18,6 +18,11 @@ const routes = [
 		component: () => import("@/views/Login.vue"), // Lazy load Login view
 	},
 	{
+		path: "/details/:slug",
+		name: "JobDetails",
+		component: () => import("@/views/JobDetails.vue"), // Lazy load JobDetails view
+	},
+	{
 		path: "/register",
 		name: "Register",
 		component: () => import("@/views/Register.vue"), // Lazy load Register view
@@ -29,11 +34,26 @@ const routes = [
 		children: [
 			{
 				path: "",
-				component: Home,
+				component: () => import("@/views/Dashboard.vue"),
 			},
 			{
-				path: "jobs",
-				component: () => import("@/views/Login.vue"), // Lazy load JobList view
+				path: "manage-job",
+				component: () => import("@/views/ManageJobs.vue"), // Lazy load ManageJobs view
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "add-job",
+				component: () => import("@/components/forms/FormAddJob.vue"), // Lazy load FormAddJob view
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "candidates",
+				component: () => import("@/views/Candidate.vue"), // Lazy load Candidate view
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "company-profile",
+				component: () => import("@/components/forms/CompanyProfile.vue"), // Lazy load CompanyProfile view
 				meta: { requiresAuth: true },
 			},
 			// {

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
-import { GrAdd } from "vue-icons-plus/gr";
 import { MdWork } from "vue-icons-plus/md";
-import { FaHamburger } from "vue-icons-plus/fa";
 import { AiOutlineMenu } from "vue-icons-plus/ai";
 import { BiBuildings, BiSolidDashboard } from "vue-icons-plus/bi";
 import { HiMiniUserGroup } from "vue-icons-plus/hi2";

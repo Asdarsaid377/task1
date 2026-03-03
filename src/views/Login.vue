@@ -1,32 +1,30 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/services/authService";
-const router = useRouter();
+// import { reactive, ref } from "vue";
+// import { useRouter } from "vue-router";
 
-const form = reactive({
-	email: "",
-	password: "",
-	remember_me: false,
-});
+// const router = useRouter();
 
-const seePassword = reactive({
-	visible: false,
-});
+// const form = reactive({
+// 	email: "",
+// 	password: "",
+// 	remember_me: false,
+// });
 
-const submit = async () => {
-	if (form.email == "admin@jobsync.com" && form.password == "admin123") {
-		router.push("/dashboard");
-	}
-};
-const email = ref("");
-const password = ref("");
-const loading = ref(false);
-const errorMessage = ref("");
+// const seePassword = reactive({
+// 	visible: false,
+// });
+
+// const submit = async () => {
+// 	if (form.email == "admin@jobsync.com" && form.password == "admin123") {
+// 		router.push("/dashboard");
+// 	}
+// };
+// const email = ref("");
+// const password = ref("");
+// const loading = ref(false);
+// const errorMessage = ref("");
 </script>
 
-<template>
-	
-</template>
+<template></template>
 
 <script setup></script>

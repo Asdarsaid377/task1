@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AiOutlineLeft, AiOutlineRight } from "vue-icons-plus/ai";
-import { jobsDummy } from "@/common/dummyData";
+import { dummyJobs } from "@/common/dummyData";
 import JobCard from "@/components/shared/JobCard.vue";
 const handleApply = (id: number | string) => {
 	console.log("Melamar pada pekerjaan ID:", id);
@@ -139,7 +139,7 @@ const handleViewDetails = (id: number | string) => {
 				</div>
 				<!-- Job Card 1 -->
 				<JobCard
-					v-for="item in jobsDummy"
+					v-for="item in dummyJobs"
 					:key="item.id"
 					:job="item"
 					@apply="handleApply"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { BsWhatsapp, BsInstagram, BsLink45Deg } from "vue-icons-plus/bs";
 import { AiOutlineClose } from "vue-icons-plus/ai";
 

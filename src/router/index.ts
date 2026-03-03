@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // Import halaman
 import Home from "@/views/Home.vue";
-import Login from "@/views/Login.vue";
-import NotFound from "@/views/NotFound.vue";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
 
 const routes = [

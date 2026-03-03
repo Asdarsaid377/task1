@@ -1,7 +1,7 @@
 export type JobType = "full-time" | "part-time" | "contract";
 
 export interface IJob {
-	id: string;
+	id: string | number;
 	title: string;
 	description: string;
 	location: string;

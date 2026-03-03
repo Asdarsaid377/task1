@@ -1,17 +1,7 @@
 <script setup lang="ts">
-import { AiOutlineLeft, AiOutlineRight } from "vue-icons-plus/ai";
-import { jobsDummy } from "@/common/dummyData";
-import JobCard from "@/components/shared/JobCard.vue";
 import { BiBuildingHouse, BiTrendingUp } from "vue-icons-plus/bi";
 import { GiHealingShield } from "vue-icons-plus/gi";
 import { MdSavings } from "vue-icons-plus/md";
-const handleApply = (id: number | string) => {
-	console.log("Melamar pada pekerjaan ID:", id);
-};
-
-const handleViewDetails = (id: number | string) => {
-	console.log("Melihat detail ID:", id);
-};
 </script>
 
 <template>

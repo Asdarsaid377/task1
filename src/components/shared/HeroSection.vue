@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AiOutlineLeft, AiOutlineRight } from "vue-icons-plus/ai";
 import { BiSearch } from "vue-icons-plus/bi";
 import { Fa6LocationDot } from "vue-icons-plus/fa6";
 </script>

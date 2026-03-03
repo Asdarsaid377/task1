@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { MdWork } from "vue-icons-plus/md";
 import { PiFishFill } from "vue-icons-plus/pi";
 </script>
 

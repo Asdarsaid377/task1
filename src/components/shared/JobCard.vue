@@ -10,7 +10,10 @@ const props = defineProps<{
 }>();
 
 // Mendefinisikan emit untuk aksi tombol
-const emit = defineEmits(["view-details", "apply"]);
+const emit = defineEmits<{
+	(e: "view-details", job: IJob): void;
+	(e: "apply", job: IJob): void;
+}>();
 </script>
 
 <template>
@@ -67,7 +70,7 @@ const emit = defineEmits(["view-details", "apply"]);
 					</span>
 					<div class="flex items-center gap-3">
 						<button
-							@click="emit('view-details', job.id)"
+							@click="emit('view-details', job)"
 							class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/80 rounded-lg transition-colors">
 							View Details
 						</button>

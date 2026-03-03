@@ -2,12 +2,13 @@
 import { AiOutlineLeft, AiOutlineRight } from "vue-icons-plus/ai";
 import { dummyJobs } from "@/common/dummyData";
 import JobCard from "@/components/shared/JobCard.vue";
-const handleApply = (id: number | string) => {
-	console.log("Melamar pada pekerjaan ID:", id);
+import type { IJob } from "@/types/JobType";
+const handleApply = (job: IJob) => {
+	console.log("Melamar pada pekerjaan:", job);
 };
 
-const handleViewDetails = (id: number | string) => {
-	console.log("Melihat detail ID:", id);
+const handleViewDetails = (job: IJob) => {
+	console.log("Melihat detail pekerjaan:", job);
 };
 </script>
 
@@ -142,8 +143,8 @@ const handleViewDetails = (id: number | string) => {
 					v-for="item in dummyJobs"
 					:key="item.id"
 					:job="item"
-					@apply="handleApply"
-					@view-details="handleViewDetails" />
+					@view-details="handleViewDetails"
+					@apply="handleApply" />
 
 				<!-- Pagination -->
 				<div class="flex items-center justify-center gap-2 pt-8">

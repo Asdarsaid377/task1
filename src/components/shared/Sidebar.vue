@@ -61,6 +61,11 @@ const menus = [
 		icon: BiBuildings,
 		path: "/dashboard/company-profile",
 	},
+	{
+		name: "Manage Users",
+		icon: HiMiniUserGroup,
+		path: "/dashboard/users",
+	},
 ];
 
 const isActive = (path: string) => {

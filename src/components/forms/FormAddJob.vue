@@ -1,7 +1,55 @@
 <script setup lang="ts">
 import { QuillEditor } from "@vueup/vue-quill";
+import { ref } from "vue";
 import { Fa6LocationDot } from "vue-icons-plus/fa6";
 import { IpWorld } from "vue-icons-plus/ip";
+import { reactive } from "vue";
+import type { IJob } from "@/types/JobType";
+import {  addDoc, collection } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { getAuth } from "firebase/auth";
+
+const location = ref("on-site");
+const auth = getAuth();
+const formJob = reactive<IJob>({
+	id: "",
+	title: "",
+	location: "on-site",
+	salaryMin: 0,
+	salaryMax: 0,
+	jobType: "full-time",
+	createdBy: "",
+	createdAt: new Date(),
+	description: "",
+});
+
+const handleSubmitJob = async () => {
+	try {
+		const data = await addDoc(collection(db, "jobs"), {
+			title: formJob.title,
+			location: location.value,
+			salaryMin: formJob.salaryMin,
+			salaryMax: formJob.salaryMax,
+			jobType: formJob.jobType,
+			description: formJob.description,
+			createdBy: auth.currentUser?.uid || "unknown",
+		});
+		if(data.id){
+
+		}
+		console.log("Job added with ID:", data.id);
+	} catch (error) {
+		console.error("Error adding job:", error);
+	}
+};
+const saveDraft = () => {
+	// Logic to save the job listing as a draft
+	console.log("Saving draft:", formJob);
+};
+
+const toggleLocation = (value: string) => {
+	location.value = value;
+};
 </script>
 
 <template>
@@ -17,10 +65,10 @@ import { IpWorld } from "vue-icons-plus/ip";
 					Fill in the details below to find your next great hire.
 				</p>
 			</div>
-			<form class="space-y-6">
+			<form @submit.prevent="handleSubmitJob" class="space-y-6">
 				<!-- Card: Basic Information -->
 				<div
-					class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 border dark:border-slate-800 p-6">
+					class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border-slate-200 border dark:border-slate-800 p-6">
 					<h3 class="text-lg font-bold mb-6 text-primary">Basic Information</h3>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<div class="col-span-full">
@@ -29,22 +77,23 @@ import { IpWorld } from "vue-icons-plus/ip";
 								>Job Title</label
 							>
 							<input
-								class="w-full rounded-lg border-slate-200 border border px-4 py-3"
+								v-model="formJob.title"
+								required="true"
+								class="w-full rounded-lg border-slate-200 border px-4 py-3"
 								placeholder="e.g. Senior Full Stack Engineer"
 								type="text" />
 						</div>
 						<div>
 							<label
 								class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-								>Category</label
+								>Employment Type</label
 							>
 							<select
+								v-model="formJob.jobType"
 								class="w-full rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3">
-								<option>Engineering</option>
-								<option>Design</option>
-								<option>Marketing</option>
-								<option>Product Management</option>
-								<option>Sales</option>
+								<option value="full-time">Full-time</option>
+								<option value="part-time">Part-time</option>
+								<option value="contract">Contract</option>
 							</select>
 						</div>
 						<div>
@@ -54,12 +103,13 @@ import { IpWorld } from "vue-icons-plus/ip";
 							>
 							<div class="flex gap-4">
 								<label
-									class="flex-1 flex items-center justify-center border-2 border-primary rounded-lg p-3 cursor-pointer bg-primary/5">
-									<input
-										checked="true"
-										class="hidden"
-										name="location"
-										type="radio" />
+									@click="toggleLocation('remote')"
+									:class="
+										location === 'remote'
+											? 'border-primary bg-primary/5'
+											: 'border-slate-200 dark:border-slate-700'
+									"
+									class="flex-1 flex items-center justify-center border-2 rounded-lg p-3 cursor-pointer">
 									<span
 										class="flex items-center gap-2 text-sm font-semibold text-primary">
 										<span class="material-symbols-outlined text-lg"
@@ -68,9 +118,15 @@ import { IpWorld } from "vue-icons-plus/ip";
 										Remote
 									</span>
 								</label>
+
 								<label
-									class="flex-1 flex items-center justify-center border-2 border-slate-200 border dark:border-slate-700 rounded-lg p-3 cursor-pointer hover:border-slate-300">
-									<input class="hidden" name="location" type="radio" />
+									@click="toggleLocation('on-site')"
+									:class="
+										location === 'on-site'
+											? 'border-primary bg-primary/5'
+											: 'border-slate-200 dark:border-slate-700'
+									"
+									class="flex-1 flex items-center justify-center border-2 rounded-lg p-3 cursor-pointer">
 									<span
 										class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400">
 										<span class="material-symbols-outlined text-lg"
@@ -81,20 +137,7 @@ import { IpWorld } from "vue-icons-plus/ip";
 								</label>
 							</div>
 						</div>
-						<div>
-							<label
-								class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-								>Employment Type</label
-							>
-							<select
-								class="w-full rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3">
-								<option>Full-time</option>
-								<option>Part-time</option>
-								<option>Contract</option>
-								<option>Freelance</option>
-								<option>Internship</option>
-							</select>
-						</div>
+
 						<div>
 							<label
 								class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
@@ -103,24 +146,26 @@ import { IpWorld } from "vue-icons-plus/ip";
 							<div class="flex items-center gap-2">
 								<div class="relative flex-1">
 									<span
-										class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-										>$</span
+										class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400"
+										>Rp.</span
 									>
 									<input
+										v-model="formJob.salaryMin"
 										class="w-full pl-8 rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary py-3"
 										placeholder="Min"
-										type="text" />
+										type="number" />
 								</div>
 								<span class="text-slate-400">—</span>
 								<div class="relative flex-1">
 									<span
-										class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-										>$</span
+										class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400"
+										>Rp.</span
 									>
 									<input
+										v-model="formJob.salaryMax"
 										class="w-full pl-8 rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 py-3"
 										placeholder="Max"
-										type="text" />
+										type="number" />
 								</div>
 							</div>
 						</div>
@@ -128,15 +173,24 @@ import { IpWorld } from "vue-icons-plus/ip";
 				</div>
 				<!-- Card: Job Description -->
 				<div
-					class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 border dark:border-slate-800 p-6">
+					class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border-slate-200 border dark:border-slate-800 p-6">
 					<h3 class="text-lg font-bold mb-6 text-primary">Job Description</h3>
-					<QuillEditor theme="snow" class="min-h-72 border-slate-200 border" />
+					<textarea
+						v-model="formJob.description"
+						class="w-full min-h-48 rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 focus:ring-primary focus:border-primary px-4 py-3"
+						placeholder="Describe the role, responsibilities, and qualifications..." />
+					<!-- <QuillEditor
+						v-model="formJob.description"
+						theme="snow"
+						class="min-h-72 border-slate-200 border" /> -->
 				</div>
+			
 				<!-- Actions -->
 				<div class="flex items-center justify-end gap-4 py-4">
 					<button
 						class="px-6 py-3 rounded-lg border-slate-200 border dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-						type="button">
+						type="button"
+						@click="saveDraft">
 						Save Draft
 					</button>
 					<button

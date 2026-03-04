@@ -6,10 +6,16 @@ export type ApplicationStatus =
 	| "offer"
 	| "withdrawn";
 
-export interface IApplication {
+export type IApplication = {
 	id: string;
 	jobId: string;
-	applicantId: string;
+	// applicantId: string;
+	candidateId: string; // uid kandidat
+	candidateName: string;
+	candidateEmail: string;
+	resumeUrl: string;
+	coverLetter: string;
 	status: ApplicationStatus;
 	appliedAt: Date;
-}
+	updatedAt: Date;
+};

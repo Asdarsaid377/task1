@@ -3,27 +3,32 @@ import { createRouter, createWebHistory } from "vue-router";
 // Import halaman
 import Home from "@/views/Home.vue";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
+import { setupAuthGuards } from "@/lib/authguardfirebase";
 
 const routes = [
 	{
 		path: "/",
 		name: "Home",
 		component: Home,
+		meta: { title: "Home - CWF Recruitment" },
 	},
 	{
 		path: "/login",
 		name: "Login",
 		component: () => import("@/views/Login.vue"), // Lazy load Login view
+		meta: { title: "Login - CWF Recruitment" },
 	},
 	{
 		path: "/details/:slug",
 		name: "JobDetails",
 		component: () => import("@/views/JobDetails.vue"), // Lazy load JobDetails view
+		meta: { title: "Job Details - CWF Recruitment" },
 	},
 	{
 		path: "/register",
 		name: "Register",
 		component: () => import("@/views/Register.vue"), // Lazy load Register view
+		meta: { title: "Register - CWF Recruitment" },
 	},
 	{
 		path: "/dashboard",
@@ -54,6 +59,11 @@ const routes = [
 				component: () => import("@/components/forms/CompanyProfile.vue"), // Lazy load CompanyProfile view
 				meta: { requiresAuth: true },
 			},
+			{
+				path: "users",
+				component: () => import("@/views/Users.vue"), // Lazy load Candidate view
+				meta: { requiresAuth: true },
+			},
 			// {
 			//   path: '/jobs',
 			//   component: JobList
@@ -67,9 +77,15 @@ const routes = [
 	},
 ];
 
+// Update document title
+
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
 });
+router.afterEach((to) => {
+	document.title = (to.meta.title as string) || "CWF Recruitment";
+});
+setupAuthGuards(router);
 
 export default router;

@@ -1,6 +1,6 @@
 export type JobType = "full-time" | "part-time" | "contract";
 
-export interface IJob {
+export type IJob = {
 	id: string | number;
 	title: string;
 	description: string;
@@ -8,8 +8,8 @@ export interface IJob {
 	salaryMin: number;
 	salaryMax: number;
 	jobType: JobType;
-	companyLogo: string;
-	companyName: string;
+	companyLogo?: string;
+	companyName?: string;
 	createdBy: string; // uid HRD
 	createdAt: Date;
-}
+};

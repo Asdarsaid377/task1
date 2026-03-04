@@ -2,7 +2,6 @@ import type { IApplication } from "@/types/ApplicationType";
 import type { IJob } from "@/types/JobType";
 import type { Company, IUser } from "@/types/UserType";
 
-
 // Data Perusahaan yang sudah terdaftar
 export const dummyCompanies: Company[] = [
 	{
@@ -36,47 +35,56 @@ export const currentUser: IUser = {
 	id: "user-001",
 	name: "HR Manager TechCorp",
 	email: "hr.manager@techcorp.com",
-	role: "hrd",
+	role: "candidate",
 	createdAt: new Date("2024-01-01T00:00:00Z"),
+	displayName: "HR Manager TechCorp",
+	photoURL: "https://api.dicebear.com/7.x/initials/svg?seed=HRM",
+	uid: "user-001",
 };
 
-export const dummyUsers: IUser[] = [
-	{
-		id: "u1",
-		email: "hrd1@company.com",
-		name: "Budi HR",
-		role: "hrd",
-		createdAt: new Date("2026-01-01"),
-	},
-	{
-		id: "u2",
-		email: "hrd2@startup.com",
-		name: "Sari HR",
-		role: "hrd",
-		createdAt: new Date("2026-01-02"),
-	},
-	{
-		id: "u3",
-		email: "andi@mail.com",
-		name: "Andi Saputra",
-		role: "applicant",
-		createdAt: new Date("2026-01-03"),
-	},
-	{
-		id: "u4",
-		email: "rina@mail.com",
-		name: "Rina Putri",
-		role: "applicant",
-		createdAt: new Date("2026-01-04"),
-	},
-	{
-		id: "u5",
-		email: "fajar@mail.com",
-		name: "Fajar Nugraha",
-		role: "applicant",
-		createdAt: new Date("2026-01-05"),
-	},
-];
+// export const dummyUsers: IUser[] = [
+// 	{
+// 		id: "u1",
+// 		email: "hrd1@company.com",
+// 		name: "Budi HR",
+// 		role: "candidate",
+// 		createdAt: new Date("2026-01-01"),
+// 		displayName: "Budi HR",
+
+// 	},
+// 	{
+// 		id: "u2",
+// 		email: "hrd2@startup.com",
+// 		name: "Sari HR",
+// 		role: "candidate",
+// 		createdAt: new Date("2026-01-02"),
+// 		displayName: "Budi HR",
+// 	},
+// 	{
+// 		id: "u3",
+// 		email: "andi@mail.com",
+// 		name: "Andi Saputra",
+// 		role: "candidate",
+// 		createdAt: new Date("2026-01-03"),
+// 		displayName: "Budi HR",
+// 	},
+// 	{
+// 		id: "u4",
+// 		email: "rina@mail.com",
+// 		name: "Rina Putri",
+// 		role: "candidate",
+// 		createdAt: new Date("2026-01-04"),
+// 		displayName: "Budi HR",
+// 	},
+// 	{
+// 		id: "u5",
+// 		email: "fajar@mail.com",
+// 		name: "Fajar Nugraha",
+// 		role: "candidate",
+// 		createdAt: new Date("2026-01-05"),
+// 		displayName: "Fajar Nugraha",
+// 	},
+// ];
 
 export const dummyJobs: IJob[] = [
 	{
@@ -89,8 +97,8 @@ export const dummyJobs: IJob[] = [
 		jobType: "full-time",
 		createdBy: "u1",
 		createdAt: new Date("2026-02-01"),
-		companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
-		companyName: "TechCorp Solutions",
+		// companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
+		// companyName: "TechCorp Solutions",
 	},
 	{
 		id: "j2",

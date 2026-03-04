@@ -2,11 +2,43 @@
 import { BiBuildingHouse, BiTrendingUp } from "vue-icons-plus/bi";
 import { GiHealingShield } from "vue-icons-plus/gi";
 import { MdSavings } from "vue-icons-plus/md";
+type Benefit = {
+	icon: any;
+	title: string;
+	description: string;
+};
+const benefits: Benefit[] = [
+	{
+		icon: BiBuildingHouse,
+		title: "Remote Work",
+		description:
+			"Flexibility to work from anywhere in the world or our modern hub offices.",
+	},
+	{
+		icon: GiHealingShield,
+		title: "Health Insurance",
+		description:
+			"Comprehensive health, dental, and vision plans for you and your family.",
+	},
+	{
+		icon: BiTrendingUp,
+		title: "Career Growth",
+		description:
+			"Annual learning stipend and clear pathways for internal promotion.",
+	},
+	{
+		icon: MdSavings,
+		title: "Retirement Plan",
+		description:
+			"Competitive 401k matching to help you plan for a secure future.",
+	},
+];
 </script>
 
 <template>
-	<section class="py-20 px-6 lg:px-20 max-w-7xl mx-auto">
-		<div class="mb-16 text-center">
+	<section id="benefits" class="py-20 px-6 lg:px-20 max-w-7xl mx-auto">
+		<!-- Section Title -->
+		<div class="mb-16 text-center animate-slide-up">
 			<h2
 				class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-4">
 				Our Culture &amp; Benefits
@@ -16,59 +48,85 @@ import { MdSavings } from "vue-icons-plus/md";
 				you can expect when you join the JobSync family.
 			</p>
 		</div>
+
+		<!-- Benefits Grid -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 			<div
-				class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-sm hover:shadow-md transition-shadow">
+				v-for="(benefit, index) in benefits"
+				:key="index"
+				class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-sm hover:shadow-xl hover:border-primary/50 hover:scale-105 transition-all opacity-0 duration-300 cursor-pointer group animate-fade-in-up"
+				:style="{ animationDelay: `${index * 0.8}s` }">
+				<!-- Icon -->
 				<div
-					class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6">
-					<span class="material-symbols-outlined text-3xl"
-						><BiBuildingHouse
-					/></span>
+					class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300">
+					<span class="material-symbols-outlined text-3xl">
+						<component :is="benefit.icon" />
+					</span>
 				</div>
-				<h3 class="text-lg font-bold mb-2">Remote Work</h3>
+
+				<!-- Content -->
+				<h3
+					class="text-lg font-bold mb-2 group-hover:text-primary transition-colors duration-300">
+					{{ benefit.title }}
+				</h3>
 				<p class="text-sm text-slate-600 dark:text-slate-400">
-					Flexibility to work from anywhere in the world or our modern hub
-					offices.
-				</p>
-			</div>
-			<div
-				class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-sm hover:shadow-md transition-shadow">
-				<div
-					class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6">
-					<span class="material-symbols-outlined text-3xl"
-						><GiHealingShield
-					/></span>
-				</div>
-				<h3 class="text-lg font-bold mb-2">Health Insurance</h3>
-				<p class="text-sm text-slate-600 dark:text-slate-400">
-					Comprehensive health, dental, and vision plans for you and your
-					family.
-				</p>
-			</div>
-			<div
-				class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-sm hover:shadow-md transition-shadow">
-				<div
-					class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6">
-					<span class="material-symbols-outlined text-3xl"
-						><BiTrendingUp
-					/></span>
-				</div>
-				<h3 class="text-lg font-bold mb-2">Career Growth</h3>
-				<p class="text-sm text-slate-600 dark:text-slate-400">
-					Annual learning stipend and clear pathways for internal promotion.
-				</p>
-			</div>
-			<div
-				class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-sm hover:shadow-md transition-shadow">
-				<div
-					class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6">
-					<span class="material-symbols-outlined text-3xl"><MdSavings /></span>
-				</div>
-				<h3 class="text-lg font-bold mb-2">Retirement Plan</h3>
-				<p class="text-sm text-slate-600 dark:text-slate-400">
-					Competitive 401k matching to help you plan for a secure future.
+					{{ benefit.description }}
 				</p>
 			</div>
 		</div>
 	</section>
 </template>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fade-in-up {
+	animation: fadeInUp 1s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-slide-up {
+	animation: slideUp 1.5s ease-out forwards;
+}
+
+.material-symbols-outlined {
+	font-family: "Material Symbols Outlined";
+	font-variation-settings:
+		"FILL" 0,
+		"wght" 300,
+		"GRAD" 0,
+		"opsz" 24;
+}
+</style>

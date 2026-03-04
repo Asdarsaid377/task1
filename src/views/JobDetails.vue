@@ -5,14 +5,16 @@ import SharedJob from "@/components/shared/SharedJob.vue";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { dummyJobs } from "@/common/dummyData";
-
 import { AiFillSchedule, AiOutlineShareAlt } from "vue-icons-plus/ai";
 import { BiMoneyWithdraw } from "vue-icons-plus/bi";
 import { EpLocation } from "vue-icons-plus/ep";
 import { IpUploadLogs } from "vue-icons-plus/ip";
 import { TbWorldWww } from "vue-icons-plus/tb";
+import { useAuth } from "@/lib/authfirebase";
 
 const route = useRoute();
+const { user, isLoading } = useAuth();
+const isLoggedIn = computed(() => !!user.value);
 
 const isShareOpen = ref(false);
 const openShare = () => (isShareOpen.value = true);
@@ -136,6 +138,7 @@ const job = computed(() => {
 				</div>
 			</div>
 			<div
+				v-if="isLoggedIn"
 				class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 md:p-8">
 				<div class="mb-8">
 					<h2
@@ -234,6 +237,23 @@ const job = computed(() => {
 						</button>
 					</div>
 				</form>
+			</div>
+			<div
+				v-else
+				class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 md:p-8 text-center">
+				<h2
+					class="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight mb-2">
+					Please log in to apply for this job
+				</h2>
+				<p class="text-slate-500 dark:text-slate-400 mb-6">
+					You need to be logged in to submit your application. Please Sign in to
+					continue.
+				</p>
+				<router-link
+					to="/register"
+					class="inline-block px-6 py-3 bg-primary text-white rounded-lg font-bold text-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+					Sign In
+				</router-link>
 			</div>
 		</div>
 	</main>

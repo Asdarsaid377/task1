@@ -1,31 +1,32 @@
 import type { Router } from "vue-router";
 import { useAuth } from "./authfirebase";
+import "vue-router";
+
+declare module "vue-router" {
+	interface RouteMeta {
+		requiresAuth?: boolean;
+		requiredRole?: "admin" | "candidate";
+	}
+}
 
 export function setupAuthGuards(router: Router) {
-	const { isAuthenticated, isLoading, user, initializeAuth } = useAuth();
-
-	// 🔥 pastikan auth start
-	initializeAuth();
+	const { initialize, isAuthenticated, user } = useAuth();
 
 	router.beforeEach(async (to) => {
-		// wait until auth loaded
-		if (isLoading.value) {
-			await new Promise((resolve) => {
-				const unwatch = setInterval(() => {
-					if (!isLoading.value) {
-						clearInterval(unwatch);
-						resolve(true);
-					}
-				}, 50);
-			});
+		await initialize();
+		const isAuthRoute = to.path.startsWith("/auth");
+		const requiresAuth = to.meta.requiresAuth;
+		const requiredRole = to.meta.requiredRole;
+
+		if (requiresAuth && !isAuthenticated.value) {
+			return {
+				path: "/auth",
+				query: { redirect: to.fullPath }, // optional nice UX
+			};
 		}
 
-		const isAuthRoute = to.path.startsWith("/auth");
-		const isProtectedRoute = to.meta.requiresAuth === true;
-		const requiredRole = to.meta.requiredRole as string | undefined;
-
-		if (isProtectedRoute && !isAuthenticated.value) {
-			return "/auth";
+		if (requiresAuth && !isAuthenticated.value) {
+			return "/register";
 		}
 
 		if (requiredRole && user.value?.role !== requiredRole) {

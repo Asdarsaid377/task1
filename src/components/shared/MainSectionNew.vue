@@ -36,45 +36,46 @@ const benefits: Benefit[] = [
 </script>
 
 <template>
-	<section id="benefits" class="py-20 px-6 lg:px-20 max-w-7xl mx-auto">
-		<!-- Section Title -->
-		<div class="mb-16 text-center animate-slide-up">
-			<h2
-				class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-4">
-				Our Culture &amp; Benefits
-			</h2>
-			<p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-				We believe that happy employees create the best products. Here's what
-				you can expect when you join the JobSync family.
-			</p>
-		</div>
-
-		<!-- Benefits Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-			<div
-				v-for="(benefit, index) in benefits"
-				:key="index"
-				class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-sm hover:shadow-xl hover:border-primary/50 hover:scale-105 transition-all opacity-0 duration-300 cursor-pointer group animate-fade-in-up"
-				:style="{ animationDelay: `${index * 0.8}s` }">
-				<!-- Icon -->
-				<div
-					class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300">
-					<span class="material-symbols-outlined text-3xl">
-						<component :is="benefit.icon" />
-					</span>
-				</div>
-
-				<!-- Content -->
-				<h3
-					class="text-lg font-bold mb-2 group-hover:text-primary transition-colors duration-300">
-					{{ benefit.title }}
-				</h3>
-				<p class="text-sm text-slate-600 dark:text-slate-400">
-					{{ benefit.description }}
+	<div class="w-full bg-white">
+		<section class="py-20 px-6 lg:px-20 max-w-7xl mx-auto">
+			<!-- Section Title -->
+			<div class="mb-16 text-center animate-slide-up">
+				<h2 class="text-3xl font-extrabold text-slate-900 mb-4">
+					Our Culture &amp; Benefits
+				</h2>
+				<p class="text-slate-600 max-w-2xl mx-auto">
+					We believe that happy employees create the best products. Here's what
+					you can expect when you join the JobSync family.
 				</p>
 			</div>
-		</div>
-	</section>
+
+			<!-- Benefits Grid -->
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+				<div
+					v-for="(benefit, index) in benefits"
+					:key="index"
+					class="rounded-xl border border-slate-200 bg-white p-8 shadow-sm hover:shadow-xl hover:border-primary/50 hover:scale-105 transition-all opacity-0 duration-300 cursor-pointer group animate-fade-in-up"
+					:style="{ animationDelay: `${index * 0.8}s` }">
+					<!-- Icon -->
+					<div
+						class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300">
+						<span class="material-symbols-outlined text-3xl">
+							<component :is="benefit.icon" />
+						</span>
+					</div>
+
+					<!-- Content -->
+					<h3
+						class="text-lg font-bold mb-2 text-primary transition-colors duration-300">
+						{{ benefit.title }}
+					</h3>
+					<p class="text-sm text-slate-600">
+						{{ benefit.description }}
+					</p>
+				</div>
+			</div>
+		</section>
+	</div>
 </template>
 
 <style scoped>

@@ -10,7 +10,6 @@ const router = useRouter();
 const { user, isLoading } = useAuth();
 const auth = getAuth();
 
-
 const isScrolled = ref(false);
 const isMenuOpen = ref(false);
 const isProfileMenuOpen = ref(false);
@@ -74,7 +73,7 @@ onUnmounted(() => {
 
 <template>
 	<header
-		class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 lg:px-20 py-4 transition-all duration-300"
+		class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 backdrop-blur-md px-6 lg:px-20 py-4 transition-all duration-300"
 		:class="{ 'shadow-lg': isScrolled }">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between gap-4">

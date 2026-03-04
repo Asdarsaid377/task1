@@ -37,7 +37,7 @@ onUnmounted(() => {
 
 		<!-- Gradient Overlay -->
 		<div
-			class="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-900 via-transparent to-transparent z-20"></div>
+			class="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent z-20"></div>
 
 		<!-- Parallax Background Image -->
 		<div

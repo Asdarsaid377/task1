@@ -36,6 +36,7 @@ const fetchJobs = async () => {
 
 const handleDelete = async (job: IJob) => {
 	await jobService.deleteJob(job.id);
+
 	await fetchJobs();
 };
 

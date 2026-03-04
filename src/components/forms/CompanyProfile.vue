@@ -6,7 +6,7 @@ import {
 	AiOutlineMail,
 } from "vue-icons-plus/ai";
 import { BsFillCameraFill, BsFillShareFill } from "vue-icons-plus/bs";
-import { Fa6LocationCrosshairs  } from "vue-icons-plus/fa6";
+import { Fa6LocationCrosshairs } from "vue-icons-plus/fa6";
 import { FiPhoneCall } from "vue-icons-plus/fi";
 import { MdOutlineCorporateFare } from "vue-icons-plus/md";
 import { TbWorldWww } from "vue-icons-plus/tb";
@@ -16,8 +16,7 @@ import { TbWorldWww } from "vue-icons-plus/tb";
 	<main class="flex-1 overflow-y-auto">
 		<div class="p-6 space-y-8">
 			<div class="mb-8">
-				<h1
-					class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+				<h1 class="text-3xl font-black text-slate-900 tracking-tight">
 					Company Profile
 				</h1>
 				<p class="text-slate-500 mt-2">
@@ -27,7 +26,7 @@ import { TbWorldWww } from "vue-icons-plus/tb";
 			<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
 				<div class="col-span-2 space-y-8">
 					<section
-						class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+						class="bg-white rounded-xl border border-slate-200 dark:border-slate-800 p-6">
 						<h2 class="text-lg font-bold mb-6 flex items-center gap-2">
 							<span class="material-symbols-outlined text-primary"
 								><AiFillInfoCircle
@@ -57,9 +56,7 @@ import { TbWorldWww } from "vue-icons-plus/tb";
 									</button>
 								</div>
 								<div>
-									<p class="font-semibold text-slate-900 dark:text-white">
-										Company Logo
-									</p>
+									<p class="font-semibold text-slate-900">Company Logo</p>
 									<p class="text-sm text-slate-500 mt-1">
 										PNG, JPG or SVG. Recommended size 400x400px.
 									</p>
@@ -120,7 +117,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
 								<div class="relative">
 									<span
 										class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-xl"
-										><Fa6LocationCrosshairs 
+										><Fa6LocationCrosshairs
 									/></span>
 									<input
 										class="w-full pl-10 p-3 rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
@@ -222,7 +219,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
 										</div>
 									</div>
 								</div>
-								<h3 class="text-xl font-bold text-slate-900 dark:text-white">
+								<h3 class="text-xl font-bold text-slate-900">
 									JobSync Analytics
 								</h3>
 								<p
@@ -238,7 +235,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
 									<div
 										class="flex items-center gap-3 text-slate-500 dark:text-slate-400">
 										<span class="material-symbols-outlined text-lg"
-											><Fa6LocationCrosshairs 
+											><Fa6LocationCrosshairs
 										/></span>
 										<span class="text-xs">San Francisco, CA</span>
 									</div>

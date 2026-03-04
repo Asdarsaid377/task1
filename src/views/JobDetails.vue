@@ -39,7 +39,7 @@ const job = computed(() => {
 </script>
 <template>
 	<Navbar />
-	<main class="flex-1 flex justify-center py-10 px-4 md:px-10">
+	<main class="flex-1 bg-white flex justify-center py-10 px-4 md:px-10">
 		<div class="layout-content-container flex flex-col max-w-7xl flex-1 gap-8">
 			<div
 				class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 md:p-8">

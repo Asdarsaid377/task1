@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { AiOutlineSearch } from "vue-icons-plus/ai";
 import type { IUser } from "@/types/UserType";
 import { userService } from "@/services/user.service";
 import FilterandSearch from "@/components/shared/FilterandSearch.vue";

@@ -3,5 +3,5 @@ import Navbar from "../components/shared/Navbar.vue";
 </script>
 
 <template>
-	<Navbar />
+    <Navbar />
 </template>

@@ -1,15 +1,15 @@
 export type JobType = "full-time" | "part-time" | "contract";
 
 export type IJob = {
-	id: string | number;
-	title: string;
-	description: string;
-	location: string;
-	salaryMin: number;
-	salaryMax: number;
-	jobType: JobType;
-	companyLogo?: string;
-	companyName?: string;
-	createdBy: string; // uid HRD
-	createdAt: Date;
+    id: string | number;
+    title: string;
+    description: string;
+    location: string;
+    salaryMin: number;
+    salaryMax: number;
+    jobType: JobType;
+    companyLogo?: string;
+    companyName?: string;
+    createdBy: string; // uid HRD
+    createdAt: Date;
 };

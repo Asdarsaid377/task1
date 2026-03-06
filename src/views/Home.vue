@@ -8,9 +8,9 @@ import Navbar from "@/components/shared/Navbar.vue";
 </script>
 
 <template>
-	<Navbar />
-	<HeroSectionNew />
-	<MainSectionNew />
-	<JobSection />
-	<Footer />
+    <Navbar />
+    <HeroSectionNew />
+    <MainSectionNew />
+    <JobSection />
+    <Footer />
 </template>

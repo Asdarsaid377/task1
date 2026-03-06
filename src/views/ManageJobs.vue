@@ -13,7 +13,7 @@ const jobs = ref<IJob[]>([]);
 const error = ref<string | null>(null);
 const searchQuery = ref("");
 const filters = ref({
-	role: "all",
+    role: "all",
 });
 const isEditModalOpen = ref(false);
 const selectedJob = ref<IJob | undefined>(undefined);
@@ -21,22 +21,22 @@ const submitting = ref(false);
 const successMessage = ref<string | null>(null);
 
 const columns: TableColumn[] = [
-	{ key: "title", label: "Title" },
-	{ key: "description", label: "Description" },
-	{ key: "jobType", label: "Job Type" },
-	{ key: "salary", label: "Salary Range" },
-	{ key: "location", label: "Location" },
+    { key: "title", label: "Title" },
+    { key: "description", label: "Description" },
+    { key: "jobType", label: "Job Type" },
+    { key: "salary", label: "Salary Range" },
+    { key: "location", label: "Location" },
 ];
 
 const fetchJobs = async () => {
-	try {
-		loading.value = true;
-		jobs.value = await jobService.fetchJobs();
-	} catch (err) {
-		error.value = "Failed to load jobs.";
-	} finally {
-		loading.value = false;
-	}
+    try {
+        loading.value = true;
+        jobs.value = await jobService.fetchJobs();
+    } catch (err) {
+        error.value = "Failed to load jobs.";
+    } finally {
+        loading.value = false;
+    }
 };
 
 /**
@@ -94,9 +94,9 @@ const handleSubmitEdit = async (updatedData: Partial<IJob>) => {
 };
 
 const handleDelete = async (job: IJob) => {
-	await jobService.deleteJob(job.id);
+    await jobService.deleteJob(job.id);
 
-	await fetchJobs();
+    await fetchJobs();
 };
 
 const dismissError = () => {

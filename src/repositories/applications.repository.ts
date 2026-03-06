@@ -35,19 +35,19 @@ export const applicationRepository = {
 		})) as IApplication[];
 	},
 
-	async getByCandidateId(candidateId: string): Promise<IApplication[]> {
-		const snapshot = await getDocs(applicationCollection);
-		return snapshot.docs
-			.map((d) => ({ id: d.id, ...d.data() }) as IApplication)
-			.filter((app) => app.candidateId === candidateId);
-	},
+    async getByCandidateId(candidateId: string): Promise<IApplication[]> {
+        const snapshot = await getDocs(applicationCollection);
+        return snapshot.docs
+            .map((d) => ({ id: d.id, ...d.data() }) as IApplication)
+            .filter((app) => app.candidateId === candidateId);
+    },
 
-	async getByJobId(jobId: string): Promise<IApplication[]> {
-		const snapshot = await getDocs(applicationCollection);
-		return snapshot.docs
-			.map((d) => ({ id: d.id, ...d.data() }) as IApplication)
-			.filter((app) => app.jobId === jobId);
-	},
+    async getByJobId(jobId: string): Promise<IApplication[]> {
+        const snapshot = await getDocs(applicationCollection);
+        return snapshot.docs
+            .map((d) => ({ id: d.id, ...d.data() }) as IApplication)
+            .filter((app) => app.jobId === jobId);
+    },
 
 	async getByIdApplicant(id: string): Promise<IApplication | null> {
 		const applicationRef = doc(applicationCollection, id);

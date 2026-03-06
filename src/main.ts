@@ -11,8 +11,7 @@ import "@/lib/firebase";
 
 const app = createApp(App);
 
-app
-	.use(router)
-	.use(createPinia())
-	.component("QuillEditor", QuillEditor)
-	.mount("#app");
+app.use(router)
+    .use(createPinia())
+    .component("QuillEditor", QuillEditor)
+    .mount("#app");

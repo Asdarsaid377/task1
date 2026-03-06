@@ -58,6 +58,8 @@ Goals System : Mempermudah pengguna dalam mencari pekerjaan yang sesuai dengan k
 - JobCard.vue: Menampilkan informasi singkat tentang pekerjaan
 - Lazy loading untuk gambar dan konten yang berat
 - SEO Optimization dengan penggunaan meta tags yang tepat dan struktur HTML yang baik
+- Menambahkan fitur pemberitahuan by email untuk status perekrutan saat HRD mengubah status kandidat Misalnya dari review -> rejected,interview dan accepted 
+
 
 
 

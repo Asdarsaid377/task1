@@ -14,11 +14,11 @@ const error = ref<string | null>(null);
 const isMounted = ref(false);
 
 const uniqueJobTypes = computed(() => {
-    return [...new Set(dummyJobs.map((job) => job.jobType))];
+    return [...new Set(jobs.value.map((job) => job.jobType))];
 });
 
 const filteredJobs = computed(() => {
-    return dummyJobs.filter((job) => {
+    return jobs.value.filter((job) => {
         const matchesSearch =
             job.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
             job.location
@@ -31,47 +31,42 @@ const filteredJobs = computed(() => {
 });
 
 const getJob = async () => {
-	try {
-		loading.value = true;
-		error.value = null;
-		const data = await jobService.fetchJobs();
-		if (isMounted.value) {
-			jobs.value = data;
-		}
-	} catch (err) {
-		if (isMounted.value) {
-			error.value = "Failed to fetch users";
-		}
-	}
+    try {
+        loading.value = true;
+        error.value = null;
+        const data = await jobService.fetchJobs();
+        if (isMounted.value) {
+            jobs.value = data;
+        }
+    } catch (err) {
+        if (isMounted.value) {
+            error.value = "Failed to fetch users";
+        }
+    }
 };
 
 onMounted(() => {
-	isMounted.value = true;
-	getJob();
+    isMounted.value = true;
+    getJob();
 });
 
 onUnmounted(() => {
-	isMounted.value = false;
+    isMounted.value = false;
 });
 </script>
 
 <template>
-    <section
-        id="jobs"
-        class="bg-white dark:bg-slate-900/50 py-20 px-6 lg:px-20"
-    >
+    <section id="jobs" class="bg-white py-20 px-6 lg:px-20">
         <div class="max-w-7xl mx-auto">
             <!-- Section Header -->
             <div
                 class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-slide-up"
             >
                 <div>
-                    <h2
-                        class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-2"
-                    >
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-2">
                         Current Openings
                     </h2>
-                    <p class="text-slate-600 dark:text-slate-400">
+                    <p class="text-slate-600">
                         Join our growing team of designers, engineers, and
                         thinkers.
                     </p>
@@ -90,7 +85,7 @@ onUnmounted(() => {
                         >
                         <input
                             v-model="searchQuery"
-                            class="w-full sm:w-64 pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-300"
+                            class="w-full sm:w-64 pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-300 text-slate-600"
                             placeholder="Search for jobs..."
                             type="text"
                         />
@@ -99,7 +94,7 @@ onUnmounted(() => {
                     <!-- Department Filter -->
                     <select
                         v-model="selectedDept"
-                        class="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-slate-600 dark:text-slate-400 transition-all duration-300"
+                        class="px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-slate-600 transition-all duration-300"
                     >
                         <option value="">All Job Types</option>
                         <option
@@ -118,13 +113,13 @@ onUnmounted(() => {
                 <div
                     v-for="(job, index) in filteredJobs"
                     :key="searchQuery + selectedDept"
-                    class="group flex flex-col md:flex-row items-center justify-between p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/50 opacity-0 hover:shadow-2xl hover:scale-102 transition-all duration-300 cursor-pointer animate-fade-up"
+                    class="group flex flex-col md:flex-row items-center justify-between p-6 rounded-xl border border-slate-200 bg-white hover:border-primary/50 opacity-0 hover:shadow-2xl hover:scale-102 transition-all duration-300 cursor-pointer animate-fade-up"
                     :style="{ animationDelay: `${index * 0.6}s` }"
                 >
                     <!-- Job Info -->
                     <div class="flex flex-col gap-1 mb-4 md:mb-0 flex-grow">
                         <h3
-                            class="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors duration-300"
+                            class="text-xl font-bold text-slate-900 group-hover:text-primary transition-colors duration-300"
                         >
                             {{ job.title }}
                         </h3>

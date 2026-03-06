@@ -73,7 +73,7 @@ onUnmounted(() => {
 
 <template>
     <header
-        class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 backdrop-blur-md px-6 lg:px-20 py-4 transition-all duration-300"
+        class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white backdrop-blur-md px-2 lg:px-20 py-4 transition-all duration-300"
         :class="{ 'shadow-lg': isScrolled }"
     >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,34 +91,10 @@ onUnmounted(() => {
                             <PiFishFill />
                         </span>
                     </div>
-                    <h1
-                        class="font-bold tracking-tight text-primary dark:text-white text-lg"
-                    >
+                    <h1 class="font-bold tracking-tight text-primary text-lg">
                         CWF
                     </h1>
                 </router-link>
-
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center gap-8">
-                    <button
-                        @click="scrollToSection('#benefits')"
-                        class="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors duration-300 relative group"
-                    >
-                        Benefits
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-                        ></span>
-                    </button>
-                    <button
-                        @click="scrollToSection('#jobs')"
-                        class="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors duration-300 relative group"
-                    >
-                        Openings
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-                        ></span>
-                    </button>
-                </nav>
 
                 <!-- Desktop Register/Profile Button -->
                 <div class="hidden md:flex items-center gap-3">
@@ -138,7 +114,7 @@ onUnmounted(() => {
                     >
                         <button
                             @click="toggleProfileMenu"
-                            class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300"
+                            class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 transition-all duration-300"
                         >
                             <!-- User Avatar -->
                             <div
@@ -163,7 +139,7 @@ onUnmounted(() => {
                             </div>
                             <!-- Down Arrow Icon -->
                             <span
-                                class="material-symbols-outlined text-lg text-slate-600 dark:text-slate-400 transition-transform duration-300"
+                                class="material-symbols-outlined text-lg text-slate-600 transition-transform duration-300"
                                 :class="{ 'rotate-180': isProfileMenuOpen }"
                             >
                                 expand_more
@@ -179,20 +155,18 @@ onUnmounted(() => {
                         >
                             <div
                                 v-if="isProfileMenuOpen"
-                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-50"
                             >
                                 <!-- User Info -->
                                 <div
-                                    class="px-4 py-3 border-b border-slate-200 dark:border-slate-700"
+                                    class="px-4 py-3 border-b border-slate-200"
                                 >
                                     <p
-                                        class="text-sm font-semibold text-slate-900 dark:text-white"
+                                        class="text-sm font-semibold text-slate-900"
                                     >
                                         {{ user?.displayName || "User" }}
                                     </p>
-                                    <p
-                                        class="text-xs text-slate-500 dark:text-slate-400"
-                                    >
+                                    <p class="text-xs text-slate-500">
                                         {{ user?.email }}
                                     </p>
                                     <p
@@ -210,7 +184,12 @@ onUnmounted(() => {
                                             : '/candidate/dashboard'
                                     "
                                     @click="closeProfileMenu"
-                                    class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-300"
+                                    class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-100 transition-colors duration-300"
+                                    :class="
+                                        user?.role === 'candidate'
+                                            ? 'hidden'
+                                            : ''
+                                    "
                                 >
                                     <span
                                         class="material-symbols-outlined text-lg"
@@ -227,7 +206,10 @@ onUnmounted(() => {
                                             : '/candidate/profile'
                                     "
                                     @click="closeProfileMenu"
-                                    class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-300"
+                                    class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-100 transition-colors duration-300"
+                                    :class="
+                                        user?.role === 'admin' ? 'hidden' : ''
+                                    "
                                 >
                                     <span
                                         class="material-symbols-outlined text-lg"
@@ -237,14 +219,12 @@ onUnmounted(() => {
                                 </router-link>
 
                                 <!-- Divider -->
-                                <div
-                                    class="h-px bg-slate-200 dark:bg-slate-700 my-2"
-                                ></div>
+                                <div class="h-px bg-slate-200 my-2"></div>
 
                                 <!-- Logout Button -->
                                 <button
                                     @click="handleLogout"
-                                    class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-300"
+                                    class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors duration-300"
                                 >
                                     <span
                                         class="material-symbols-outlined text-lg"
@@ -259,7 +239,7 @@ onUnmounted(() => {
                     <!-- Loading Skeleton -->
                     <div
                         v-if="isLoading"
-                        class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse"
+                        class="w-10 h-10 rounded-full bg-slate-200 animate-pulse"
                     ></div>
                 </div>
 
@@ -268,26 +248,26 @@ onUnmounted(() => {
                     <!-- Hamburger Menu Button -->
                     <button
                         @click="toggleMenu"
-                        class="inline-flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-300"
+                        class="inline-flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 transition-colors duration-300"
                         :aria-expanded="isMenuOpen"
                         aria-label="Toggle menu"
                     >
                         <!-- Hamburger Icon -->
                         <div class="flex flex-col gap-1.5 w-6 h-5">
                             <span
-                                class="block w-full h-0.5 bg-slate-900 dark:bg-slate-100 rounded-full transition-all duration-300"
+                                class="block w-full h-0.5 bg-slate-900 rounded-full transition-all duration-300"
                                 :class="{
                                     'rotate-45 translate-y-2': isMenuOpen,
                                 }"
                             ></span>
                             <span
-                                class="block w-full h-0.5 bg-slate-900 dark:bg-slate-100 rounded-full transition-all duration-300"
+                                class="block w-full h-0.5 bg-slate-900 rounded-full transition-all duration-300"
                                 :class="{
                                     'opacity-0': isMenuOpen,
                                 }"
                             ></span>
                             <span
-                                class="block w-full h-0.5 bg-slate-900 dark:bg-slate-100 rounded-full transition-all duration-300"
+                                class="block w-full h-0.5 bg-slate-900 rounded-full transition-all duration-300"
                                 :class="{
                                     '-rotate-45 -translate-y-2': isMenuOpen,
                                 }"
@@ -299,18 +279,16 @@ onUnmounted(() => {
         </div>
 
         <!-- Mobile Menu Overlay -->
-        <transition
-            enter-active-class="transition-opacity duration-300"
-            leave-active-class="transition-opacity duration-300"
-            enter-from-class="opacity-0"
-            leave-to-class="opacity-0"
-        >
-            <div
-                v-if="isMenuOpen"
-                class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
-                @click="closeMenu"
-            ></div>
-        </transition>
+        <!-- <transition
+			enter-active-class="transition-opacity duration-300"
+			leave-active-class="transition-opacity duration-300"
+			enter-from-class="opacity-0"
+			leave-to-class="opacity-0">
+			<div
+				v-if="isMenuOpen"
+				class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+				@click="closeMenu"></div>
+		</transition> -->
 
         <!-- Mobile Menu -->
         <transition
@@ -321,33 +299,13 @@ onUnmounted(() => {
         >
             <div
                 v-if="isMenuOpen"
-                class="absolute top-full left-0 right-0 md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg z-50"
+                class="absolute top-full left-0 right-0 md:hidden bg-white border-b border-slate-200 shadow-lg z-50"
             >
                 <nav class="flex flex-col px-6 py-4 space-y-2">
                     <!-- Benefits Link -->
-                    <button
-                        @click="scrollToSection('#benefits')"
-                        class="w-full text-left px-4 py-3 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all duration-300 flex items-center gap-3"
-                    >
-                        <span class="material-symbols-outlined text-xl"
-                            >star</span
-                        >
-                        Benefits
-                    </button>
-
-                    <!-- Openings Link -->
-                    <button
-                        @click="scrollToSection('#jobs')"
-                        class="w-full text-left px-4 py-3 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all duration-300 flex items-center gap-3"
-                    >
-                        <span class="material-symbols-outlined text-xl"
-                            >work</span
-                        >
-                        Openings
-                    </button>
 
                     <!-- Divider -->
-                    <div class="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+                    <div class="h-px bg-slate-200 my-2"></div>
 
                     <!-- Register Button (Mobile) - Show jika belum login -->
                     <router-link
@@ -362,17 +320,11 @@ onUnmounted(() => {
                     <!-- Mobile User Menu - Show jika sudah login -->
                     <div v-if="isLoggedIn && !isLoading" class="space-y-2">
                         <!-- User Info Card -->
-                        <div
-                            class="px-4 py-3 rounded-lg bg-slate-100 dark:bg-slate-800"
-                        >
-                            <p
-                                class="text-sm font-semibold text-slate-900 dark:text-white"
-                            >
+                        <div class="px-4 py-3 rounded-lg bg-slate-100">
+                            <p class="text-sm font-semibold text-slate-900">
                                 {{ user?.displayName || "User" }}
                             </p>
-                            <p
-                                class="text-xs text-slate-500 dark:text-slate-400"
-                            >
+                            <p class="text-xs text-slate-500">
                                 {{ user?.email }}
                             </p>
                             <p
@@ -390,7 +342,7 @@ onUnmounted(() => {
                                     : '/candidate/dashboard'
                             "
                             @click="closeMenu"
-                            class="flex items-center gap-3 w-full px-4 py-3 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all duration-300"
+                            class="flex items-center gap-3 w-full px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary rounded-lg transition-all duration-300"
                         >
                             <span class="material-symbols-outlined text-xl"
                                 >dashboard</span
@@ -406,7 +358,7 @@ onUnmounted(() => {
                                     : '/candidate/profile'
                             "
                             @click="closeMenu"
-                            class="flex items-center gap-3 w-full px-4 py-3 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all duration-300"
+                            class="flex items-center gap-3 w-full px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary rounded-lg transition-all duration-300"
                         >
                             <span class="material-symbols-outlined text-xl"
                                 >person</span
@@ -417,7 +369,7 @@ onUnmounted(() => {
                         <!-- Logout Button -->
                         <button
                             @click="handleLogout"
-                            class="flex items-center gap-3 w-full px-4 py-3 text-base font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-300"
+                            class="flex items-center gap-3 w-full px-4 py-3 text-base font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300"
                         >
                             <span class="material-symbols-outlined text-xl"
                                 >logout</span

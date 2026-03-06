@@ -75,6 +75,21 @@ defineProps({
 					</tr>
 				</tbody>
 			</table>
+			<div
+				v-if="!loading && items.length > 0"
+				class="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800">
+				<p class="text-sm text-slate-500">
+					Showing
+					<span class="font-semibold text-slate-900 dark:text-white">
+						{{ items.length }}
+					</span>
+					of
+					<span class="font-semibold text-slate-900 dark:text-white">
+						{{ items.length }}
+					</span>
+					data
+				</p>
+			</div>
 
 			<div v-if="!items.length" class="p-6 text-center text-slate-400">
 				No data available

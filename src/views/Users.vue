@@ -24,9 +24,9 @@ const filters = ref({
 // Computed
 const filteredUsers = computed(() => {
 	return users.value.filter((user) => {
-		const matchesSearch = user.displayName
-			.toLowerCase()
-			.includes(searchQuery.value.toLowerCase());
+		const matchesSearch = user.displayName;
+		// .toLowerCase()
+		// .includes(searchQuery.value.toLowerCase());
 		const matchesRole = !roleFilter.value || user.role === roleFilter.value;
 		return matchesSearch && matchesRole;
 	});
@@ -321,15 +321,6 @@ onMounted(() => {
 										<span class="material-symbols-outlined text-xl">edit</span>
 									</button>
 
-									<!-- View Profile Button -->
-									<button
-										class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
-										title="View Profile">
-										<span class="material-symbols-outlined text-xl"
-											>visibility</span
-										>
-									</button>
-
 									<!-- Delete Button -->
 									<button
 										@click="openDeleteModal(user)"
@@ -345,7 +336,6 @@ onMounted(() => {
 					</tbody>
 				</table>
 			</div>
-
 			<!-- Pagination Info -->
 			<div
 				v-if="!loading && filteredUsers.length > 0"

@@ -1,10 +1,38 @@
 <script setup lang="ts">
+import { alertService } from "@/components/alert/notif";
+import DashboardCard from "@/components/card/DashboardCard.vue";
+import { applicationService } from "@/services/applications.service";
+import type { GetApplication } from "@/types/ApplicationType";
+import { onMounted, onUnmounted, ref } from "vue";
 import { AiFillCalendar, AiOutlineMore } from "vue-icons-plus/ai";
 import { BiTrendingUp } from "vue-icons-plus/bi";
 import { BsPalette, BsTerminal } from "vue-icons-plus/bs";
 import { CgMoreAlt } from "vue-icons-plus/cg";
 import { MdOutlineWork } from "vue-icons-plus/md";
 import { TbBrandGoogleAnalytics } from "vue-icons-plus/tb";
+
+const applications = ref<GetApplication[]>([]);
+
+const fetchApplication = async () => {
+	try {
+		const data = await applicationService.fetchApplicationsWithJob();
+
+		applications.value = data
+			.sort(
+				(a, b) =>
+					new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime(),
+			)
+			.slice(0, 7);
+	} catch (e: any) {
+		alertService.error(`Error ${e}`, 2000);
+	}
+};
+
+onMounted(() => {
+	fetchApplication();
+});
+
+onUnmounted(() => [(applications.value = [])]);
 </script>
 
 <template>
@@ -20,57 +48,23 @@ import { TbBrandGoogleAnalytics } from "vue-icons-plus/tb";
 			</div>
 			<!-- Stats Cards -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-				<div
-					class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-					<div class="flex justify-between items-start">
-						<div>
-							<p class="text-sm font-medium text-slate-500">Total Lamaran</p>
-							<p class="text-3xl font-bold mt-1">1,284</p>
-						</div>
-						<div
-							class="p-2 bg-green-50 dark:bg-green-500/10 rounded-lg text-green-600">
-							<span class="material-symbols-outlined"><BiTrendingUp /></span>
-						</div>
-					</div>
-					<p class="text-sm font-medium text-green-600 mt-4">
-						+12%
-						<span class="text-slate-400 font-normal">from last month</span>
-					</p>
-				</div>
-				<div
-					class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-					<div class="flex justify-between items-start">
-						<div>
-							<p class="text-sm font-medium text-slate-500">Lowongan Aktif</p>
-							<p class="text-3xl font-bold mt-1">12</p>
-						</div>
-						<div class="p-2 bg-primary/10 rounded-lg text-primary">
-							<span class="material-symbols-outlined"><MdOutlineWork /></span>
-						</div>
-					</div>
-					<p class="text-sm font-medium text-slate-500 mt-4">
-						0% <span class="text-slate-400 font-normal">no change</span>
-					</p>
-				</div>
-				<div
-					class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-					<div class="flex justify-between items-start">
-						<div>
-							<p class="text-sm font-medium text-slate-500">
-								Wawancara Terjadwal
-							</p>
-							<p class="text-3xl font-bold mt-1">48</p>
-						</div>
-						<div
-							class="p-2 bg-orange-50 dark:bg-orange-500/10 rounded-lg text-orange-600">
-							<span class="material-symbols-outlined"><AiFillCalendar /></span>
-						</div>
-					</div>
-					<p class="text-sm font-medium text-orange-600 mt-4">
-						-5%
-						<span class="text-slate-400 font-normal">from last week</span>
-					</p>
-				</div>
+				<DashboardCard
+					:value="applications.length"
+					:title="'Total Lamaran'"
+					:icon="BiTrendingUp"
+					:trend="'12'" />
+
+				<DashboardCard
+					:value="applications.length"
+					:title="'Lowongan Aktif'"
+					:icon="MdOutlineWork"
+					:trend="'0'" />
+
+				<DashboardCard
+					:value="applications.length"
+					:title="'Wawancara Terjadwal'"
+					:icon="AiFillCalendar"
+					:trend="'0'" />
 			</div>
 			<!-- Recent Applicants -->
 			<div
@@ -104,48 +98,45 @@ import { TbBrandGoogleAnalytics } from "vue-icons-plus/tb";
 									class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">
 									Status
 								</th>
-								<th
-									class="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">
-									Action
-								</th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
 							<tr
-								v-for="applicant in [1, 2, 3, 4]"
-								:key="applicant"
+								v-for="applicant in applications"
+								:key="applicant.id"
 								class="hover:bg-background-light dark:hover:bg-slate-800/30 transition-colors">
 								<td class="px-6 py-4">
 									<div class="flex items-center gap-3">
 										<div
 											class="size-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-primary">
-											JD
+											<img
+												class="rounded-full"
+												:src="applicant.user.photoURL"
+												alt="" />
 										</div>
 										<div>
-											<p class="text-sm font-bold">John Doe</p>
-											<p class="text-xs text-slate-500">john.doe@email.com</p>
+											<p class="text-sm font-bold">
+												{{ applicant.candidateName }}
+											</p>
+											<p class="text-xs text-slate-500">
+												{{ applicant.candidateEmail }}
+											</p>
 										</div>
 									</div>
 								</td>
 								<td class="px-6 py-4">
-									<p class="text-sm font-medium">Senior Product Designer</p>
+									<p class="text-sm font-medium">{{ applicant.job.title }}</p>
 								</td>
 								<td class="px-6 py-4">
-									<p class="text-sm text-slate-500">Oct 24, 2023</p>
+									<p class="text-sm text-slate-500">
+										{{ new Date(applicant.appliedAt).toLocaleString() }}
+									</p>
 								</td>
 								<td class="px-6 py-4">
 									<span
 										class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-										>Reviewing</span
+										>{{ applicant.status }}</span
 									>
-								</td>
-								<td class="px-6 py-4 text-right">
-									<button
-										class="text-slate-400 hover:text-primary transition-colors">
-										<span class="material-symbols-outlined"
-											><AiOutlineMore
-										/></span>
-									</button>
 								</td>
 							</tr>
 						</tbody>

@@ -61,9 +61,9 @@ const signInWithGoogle = async () => {
 		// Redirect ke dashboard
 		const userProfile = (await getDoc(userDocRef)).data() as UserProfile;
 		if (userProfile.role === "admin") {
-			router.push("/admin/dashboard");
+			router.push("/dashboard");
 		} else {
-			router.push("/");
+			window.location.href = "/";
 		}
 	} catch (err: any) {
 		console.error("Google Sign In Error:", err);
@@ -72,6 +72,8 @@ const signInWithGoogle = async () => {
 		loading.value = false;
 	}
 };
+
+	
 
 const handleEmailSignUp = async () => {
 	if (!email.value || !password.value || !displayName.value) {

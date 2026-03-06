@@ -12,4 +12,6 @@ export type IJob = {
 	companyName?: string;
 	createdBy: string; // uid HRD
 	createdAt: Date;
+	requirements?: string[];
+	status?: string;
 };

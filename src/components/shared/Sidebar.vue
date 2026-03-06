@@ -56,11 +56,11 @@ const menus = [
 		icon: HiMiniUserGroup,
 		path: "/dashboard/candidates",
 	},
-	{
-		name: "Company Profile",
-		icon: BiBuildings,
-		path: "/dashboard/company-profile",
-	},
+	// {
+	// 	name: "Company Profile",
+	// 	icon: BiBuildings,
+	// 	path: "/dashboard/company-profile",
+	// },
 	{
 		name: "Manage Users",
 		icon: HiMiniUserGroup,

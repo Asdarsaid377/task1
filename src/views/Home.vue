@@ -12,6 +12,5 @@ import Navbar from "@/components/shared/Navbar.vue";
 	<HeroSectionNew />
 	<MainSectionNew />
 	<JobSection />
-
 	<Footer />
 </template>

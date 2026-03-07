@@ -25,6 +25,12 @@ const routes = [
         meta: { title: "Job Details - CWF Recruitment" },
     },
     {
+        path: "/profile",
+        name: "Profile",
+        component: () => import("@/views/Profile.vue"), // Lazy load Register view
+        meta: { title: "Profile - CWF Recruitment", requiresAuth: true },
+    },
+    {
         path: "/register",
         name: "Register",
         component: () => import("@/views/Register.vue"), // Lazy load Register view

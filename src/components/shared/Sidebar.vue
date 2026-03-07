@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import { MdWork } from "vue-icons-plus/md";
-import { AiOutlineMenu } from "vue-icons-plus/ai";
+import { AiOutlineClose, AiOutlineMenu } from "vue-icons-plus/ai";
 import { BiBuildings, BiSolidDashboard } from "vue-icons-plus/bi";
 import { HiMiniUserGroup } from "vue-icons-plus/hi2";
 
@@ -41,31 +41,31 @@ const closeMobile = () => {
 
 /* Dynamic Menu */
 const menus = [
-	{
-		name: "Dashboard",
-		icon: BiSolidDashboard,
-		path: "/dashboard",
-	},
-	{
-		name: "Manage Jobs",
-		icon: MdWork,
-		path: "/dashboard/manage-job",
-	},
-	{
-		name: "Manage Candidates",
-		icon: HiMiniUserGroup,
-		path: "/dashboard/candidates",
-	},
-	// {
-	// 	name: "Company Profile",
-	// 	icon: BiBuildings,
-	// 	path: "/dashboard/company-profile",
-	// },
-	{
-		name: "Manage Users",
-		icon: HiMiniUserGroup,
-		path: "/dashboard/users",
-	},
+    {
+        name: "Dashboard",
+        icon: BiSolidDashboard,
+        path: "/dashboard",
+    },
+    {
+        name: "Manage Jobs",
+        icon: MdWork,
+        path: "/dashboard/manage-job",
+    },
+    {
+        name: "Manage Candidates",
+        icon: HiMiniUserGroup,
+        path: "/dashboard/candidates",
+    },
+    // {
+    // 	name: "Company Profile",
+    // 	icon: BiBuildings,
+    // 	path: "/dashboard/company-profile",
+    // },
+    {
+        name: "Manage Users",
+        icon: HiMiniUserGroup,
+        path: "/dashboard/users",
+    },
 ];
 
 const isActive = (path: string) => {
@@ -158,8 +158,9 @@ const isActive = (path: string) => {
         class="fixed bottom-5 right-5 lg:hidden bg-primary text-white p-3 rounded-full shadow-lg z-50"
         @click="toggleSidebar"
     >
-        <span class="material-symbols-outlined">
-            <AiOutlineMenu />
-        </span>
+        <AiOutlineMenu v-if="!isOpen" />
+        <div v-else="isOpen">
+            <AiOutlineClose />
+        </div>
     </button>
 </template>

@@ -49,20 +49,20 @@ const getPercentage = (count: number, total: number) => {
 
 <template>
     <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
+        class="bg-white p-6 rounded-xl border border-slate-200 darkssborder-slate-800 shadow-sm"
     >
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h3 class="font-bold text-lg text-slate-900 dark:text-white">
+                <h3 class="font-bold text-lg text-slate-900 darksstext-white">
                     Hiring Pipeline
                 </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p class="text-xs text-slate-500 darksstext-slate-400 mt-1">
                     Total applications: {{ statusCounts.applied }}
                 </p>
             </div>
             <button
-                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                class="text-slate-400 hover:text-slate-600 darksshover:text-slate-300 transition-colors"
             >
                 <span class="material-symbols-outlined text-xl">
                     <CgMoreAlt />
@@ -92,7 +92,7 @@ const getPercentage = (count: number, total: number) => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
             </svg>
-            <p class="text-slate-500 dark:text-slate-400 mt-3">
+            <p class="text-slate-500 darksstext-slate-400 mt-3">
                 Loading pipeline...
             </p>
         </div>
@@ -102,17 +102,17 @@ const getPercentage = (count: number, total: number) => {
             <!-- Applied Stage -->
             <div class="space-y-2">
                 <div class="flex justify-between text-sm">
-                    <span class="font-medium text-slate-900 dark:text-white">
+                    <span class="font-medium text-slate-900 darksstext-white">
                         Applied
                     </span>
                     <span
-                        class="text-slate-600 dark:text-slate-400 font-semibold"
+                        class="text-slate-600 darksstext-slate-400 font-semibold"
                     >
                         {{ statusCounts.applied }} candidates
                     </span>
                 </div>
                 <div
-                    class="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden"
+                    class="w-full bg-slate-100 darkssbg-slate-800 h-3 rounded-full overflow-hidden"
                 >
                     <div
                         class="bg-blue-500 h-full w-[100%] rounded-full transition-all duration-500"
@@ -123,17 +123,17 @@ const getPercentage = (count: number, total: number) => {
             <!-- Screening Stage -->
             <div class="space-y-2">
                 <div class="flex justify-between text-sm">
-                    <span class="font-medium text-slate-900 dark:text-white">
+                    <span class="font-medium text-slate-900 darksstext-white">
                         Screening
                     </span>
                     <span
-                        class="text-slate-600 dark:text-slate-400 font-semibold"
+                        class="text-slate-600 darksstext-slate-400 font-semibold"
                     >
                         {{ statusCounts.screening }} candidates
                     </span>
                 </div>
                 <div
-                    class="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden"
+                    class="w-full bg-slate-100 darkssbg-slate-800 h-3 rounded-full overflow-hidden"
                 >
                     <div
                         class="bg-purple-500 h-full transition-all duration-500"
@@ -142,7 +142,7 @@ const getPercentage = (count: number, total: number) => {
                         }"
                     ></div>
                 </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400">
+                <p class="text-xs text-slate-500 darksstext-slate-400">
                     {{
                         getPercentage(
                             statusCounts.screening,
@@ -155,17 +155,17 @@ const getPercentage = (count: number, total: number) => {
             <!-- Interview Stage -->
             <div class="space-y-2">
                 <div class="flex justify-between text-sm">
-                    <span class="font-medium text-slate-900 dark:text-white">
+                    <span class="font-medium text-slate-900 darksstext-white">
                         Interview
                     </span>
                     <span
-                        class="text-slate-600 dark:text-slate-400 font-semibold"
+                        class="text-slate-600 darksstext-slate-400 font-semibold"
                     >
                         {{ statusCounts.interview }} candidates
                     </span>
                 </div>
                 <div
-                    class="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden"
+                    class="w-full bg-slate-100 darkssbg-slate-800 h-3 rounded-full overflow-hidden"
                 >
                     <div
                         class="bg-yellow-500 h-full transition-all duration-500"
@@ -174,7 +174,7 @@ const getPercentage = (count: number, total: number) => {
                         }"
                     ></div>
                 </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400">
+                <p class="text-xs text-slate-500 darksstext-slate-400">
                     {{
                         getPercentage(
                             statusCounts.interview,
@@ -187,17 +187,17 @@ const getPercentage = (count: number, total: number) => {
             <!-- Final Selection Stage -->
             <div class="space-y-2">
                 <div class="flex justify-between text-sm">
-                    <span class="font-medium text-slate-900 dark:text-white">
+                    <span class="font-medium text-slate-900 darksstext-white">
                         Final Selection
                     </span>
                     <span
-                        class="text-slate-600 dark:text-slate-400 font-semibold"
+                        class="text-slate-600 darksstext-slate-400 font-semibold"
                     >
                         {{ statusCounts.final }} candidates
                     </span>
                 </div>
                 <div
-                    class="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden"
+                    class="w-full bg-slate-100 darkssbg-slate-800 h-3 rounded-full overflow-hidden"
                 >
                     <div
                         class="bg-green-500 h-full transition-all duration-500"
@@ -206,7 +206,7 @@ const getPercentage = (count: number, total: number) => {
                         }"
                     ></div>
                 </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400">
+                <p class="text-xs text-slate-500 darksstext-slate-400">
                     {{
                         getPercentage(statusCounts.final, statusCounts.applied)
                     }}% of applied
@@ -217,10 +217,10 @@ const getPercentage = (count: number, total: number) => {
         <!-- Pipeline Info -->
         <div
             v-if="!loading && statusCounts.applied > 0"
-            class="mt-6 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50"
+            class="mt-6 p-4 rounded-lg bg-slate-50 darkssbg-slate-800/50"
         >
-            <p class="text-xs text-slate-600 dark:text-slate-400">
-                <span class="font-semibold text-slate-900 dark:text-white">
+            <p class="text-xs text-slate-600 darksstext-slate-400">
+                <span class="font-semibold text-slate-900 darksstext-white">
                     Conversion Rate:
                 </span>
                 {{ getPercentage(statusCounts.final, statusCounts.applied) }}%

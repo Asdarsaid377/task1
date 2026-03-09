@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 <template>
     <div
-        class="group relative bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary/50 hover:shadow-lg transition-all"
+        class="group relative bg-white p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary/50 hover:shadow-lg transition-all"
     >
         <div class="flex flex-col md:flex-row gap-6">
             <div

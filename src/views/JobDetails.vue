@@ -18,6 +18,7 @@ import type { IApplication } from "@/types/ApplicationType";
 const route = useRoute();
 const { user } = useAuth();
 const candidateEmail = computed(() => user.value?.email ?? "");
+const candidateDisplayName = computed(() => user.value?.displayName ?? "");
 const candidateId = computed(() => user.value?.uid ?? "");
 const isLoggedIn = computed(() => !!user.value);
 const slugParam = computed(() => route.params.slug as string);
@@ -139,7 +140,7 @@ onMounted(() => {
                             {{ jobData?.description }}
                         </p>
                         <h3
-                            class="text-slate-900 dark:text-slate-100 font-bold mt-6 mb-2"
+                            class="text-slate-900 darksss:text-slate-100 font-bold mt-6 mb-2"
                         >
                             Requirements
                         </h3>
@@ -159,6 +160,7 @@ onMounted(() => {
                 :job-id="extractedId ?? ''"
                 :candidate-id="candidateId"
                 :candidate-email="candidateEmail"
+                :candidate-display-name="candidateDisplayName"
                 :loading="loading"
                 @submit="handleSubmit"
                 v-if="isLoggedIn"

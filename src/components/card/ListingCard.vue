@@ -89,13 +89,13 @@ const getEngagement = (count: number): string => {
 const getEngagementColor = (engagement: string): string => {
     switch (engagement) {
         case "High":
-            return "text-green-600 dark:text-green-400";
+            return "text-green-600";
         case "Medium":
-            return "text-yellow-600 dark:text-yellow-400";
+            return "text-yellow-600";
         case "Low":
-            return "text-orange-600 dark:text-orange-400";
+            return "text-orange-600";
         default:
-            return "text-slate-600 dark:text-slate-400";
+            return "text-slate-600";
     }
 };
 
@@ -103,28 +103,28 @@ const getEngagementColor = (engagement: string): string => {
 const getEngagementBgColor = (engagement: string): string => {
     switch (engagement) {
         case "High":
-            return "bg-green-50 dark:bg-green-900/20";
+            return "bg-green-50";
         case "Medium":
-            return "bg-yellow-50 dark:bg-yellow-900/20";
+            return "bg-yellow-50";
         case "Low":
-            return "bg-orange-50 dark:bg-orange-900/20";
+            return "bg-orange-50";
         default:
-            return "bg-slate-50 dark:bg-slate-900/20";
+            return "bg-slate-50 /20";
     }
 };
 </script>
 
 <template>
     <div
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
+        class="bg-white p-6 rounded-xl border border-slate-200 :border-slate-800 shadow-sm"
     >
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-lg text-slate-900 dark:text-white">
+            <h3 class="font-bold text-lg text-slate-900">
                 Recent Listings Performance
             </h3>
             <button
-                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                class="text-slate-400 hover:text-slate-600 transition-colors"
             >
                 <span class="material-symbols-outlined text-xl">
                     <TbBrandGoogleAnalytics />
@@ -154,21 +154,15 @@ const getEngagementBgColor = (engagement: string): string => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
             </svg>
-            <p class="text-slate-500 dark:text-slate-400 mt-3">
-                Loading listings...
-            </p>
+            <p class="text-slate-500 mt-3">Loading listings...</p>
         </div>
 
         <!-- Empty State -->
         <div v-else-if="applicationsByJob.length === 0" class="p-8 text-center">
-            <span
-                class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600"
-            >
+            <span class="material-symbols-outlined text-4xl text-slate-300">
                 briefcase_off
             </span>
-            <p class="text-slate-500 dark:text-slate-400 mt-2">
-                No applications yet
-            </p>
+            <p class="text-slate-500 mt-2">No applications yet</p>
         </div>
 
         <!-- Job Listings -->
@@ -176,7 +170,7 @@ const getEngagementBgColor = (engagement: string): string => {
             <div
                 v-for="job in applicationsByJob"
                 :key="job.jobId"
-                class="flex items-center gap-4 p-4 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+                class="flex items-center gap-4 p-4 rounded-lg border border-slate-100 darkssborder-slate-800 hover:bg-slate-50 darksshover:bg-slate-800/50 transition-colors cursor-pointer group"
             >
                 <!-- Job Icon -->
                 <div
@@ -190,12 +184,12 @@ const getEngagementBgColor = (engagement: string): string => {
                 <!-- Job Info -->
                 <div class="flex-1 min-w-0">
                     <p
-                        class="text-sm font-bold text-slate-900 dark:text-white truncate"
+                        class="text-sm font-bold text-slate-900 darksstext-white truncate"
                     >
                         {{ job.jobTitle }}
                     </p>
                     <p
-                        class="text-xs text-slate-500 dark:text-slate-400 mt-0.5"
+                        class="text-xs text-slate-500 darksstext-slate-400 mt-0.5"
                     >
                         <span
                             >{{ job.applicationCount }} application{{
@@ -229,7 +223,7 @@ const getEngagementBgColor = (engagement: string): string => {
                         {{ job.engagement }}
                     </p>
                     <p
-                        class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5"
+                        class="text-[10px] text-slate-500 darksstext-slate-400 uppercase tracking-wider mt-0.5"
                     >
                         Engagement
                     </p>
@@ -243,7 +237,7 @@ const getEngagementBgColor = (engagement: string): string => {
                 applicationsByJob.length >= maxItems &&
                 applications.length > maxItems
             "
-            class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-center"
+            class="mt-4 pt-4 border-t border-slate-100 darkssborder-slate-800 text-center"
         >
             <button
                 class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"

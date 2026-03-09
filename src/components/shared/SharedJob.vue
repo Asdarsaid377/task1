@@ -55,10 +55,12 @@ const nativeShare = async () => {
 
             <!-- Modal -->
             <div
-                class="relative bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-6 z-10"
+                class="relative bg-white darksss:bg-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-6 z-10"
             >
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-6">
+                <div
+                    class="flex text-slate-700 justify-between items-center mb-6"
+                >
                     <h2 class="text-lg font-bold">Share Job</h2>
                     <button @click="close">
                         <AiOutlineClose />
@@ -75,10 +77,10 @@ const nativeShare = async () => {
                 </button>
 
                 <!-- Social Buttons -->
-                <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-3 text-slate-700 gap-4 mb-6">
                     <button
                         @click="shareWhatsApp"
-                        class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 transition"
+                        class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-green-50 darksss:hover:bg-green-900/20 transition"
                     >
                         <BsWhatsapp class="text-2xl text-green-500" />
                         <span class="text-sm">WhatsApp</span>
@@ -86,7 +88,7 @@ const nativeShare = async () => {
 
                     <button
                         @click="shareInstagram"
-                        class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-pink-50 dark:hover:bg-pink-900/20 transition"
+                        class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-pink-50 darksss:hover:bg-pink-900/20 transition"
                     >
                         <BsInstagram class="text-2xl text-pink-500" />
                         <span class="text-sm">Instagram</span>
@@ -94,7 +96,7 @@ const nativeShare = async () => {
 
                     <button
                         @click="copyLink"
-                        class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                        class="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-slate-100 darksss:hover:bg-slate-700 transition"
                     >
                         <BsLink45Deg class="text-2xl" />
                         <span class="text-sm">
@@ -105,7 +107,7 @@ const nativeShare = async () => {
 
                 <!-- URL Preview -->
                 <div
-                    class="bg-slate-100 dark:bg-slate-700 p-3 rounded-lg text-xs break-all"
+                    class="bg-slate-100 text-slate-700 darksss:bg-slate-700 p-3 rounded-lg text-xs break-all"
                 >
                     {{ url }}
                 </div>

@@ -85,7 +85,7 @@ export const applicationRepository = {
             resumeUrl,
         };
         const docRef = await addDoc(applicationCollection, finalData);
-        console.log(docRef.id);
+        // console.log(docRef.id);
         return { id: docRef.id, ...finalData } as IApplication;
     },
 

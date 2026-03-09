@@ -1,11 +1,15 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+    createRouter,
+    createWebHistory,
+    type RouteRecordRaw,
+} from "vue-router";
 
 // Import halaman
 import Home from "@/views/Home.vue";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import { setupAuthGuards } from "@/lib/authguardfirebase";
 
-const routes = [
+const routes: RouteRecordRaw[] = [
     {
         path: "/",
         name: "Home",
@@ -39,7 +43,8 @@ const routes = [
     {
         path: "/dashboard",
         component: DashboardLayout,
-        meta: { requiresAuth: true },
+        // meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiredRole: "admin" },
         children: [
             {
                 path: "",
@@ -78,9 +83,16 @@ const routes = [
         ],
     },
     {
+        path: "/unauthorized",
+        name: "Forbidden",
+        component: () => import("@/views/Forbidden.vue"),
+        meta: { title: "403 - Forbidden" },
+    },
+    {
         path: "/:pathMatch(.*)*",
         name: "NotFound",
         component: () => import("@/views/NotFound.vue"), // Lazy load NotFound view
+        meta: { title: "404 - Notfound" },
     },
 ];
 

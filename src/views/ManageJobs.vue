@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { jobService } from "@/services/job.service";
 import type { IJob } from "@/types/JobType";
 import type { TableColumn } from "@/components/table/BaseTable.vue";
@@ -7,16 +7,18 @@ import BaseTable from "@/components/table/BaseTable.vue";
 import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import FilterandSearch from "@/components/shared/FilterandSearch.vue";
 import EditModal from "@/components/modal/EditModal.vue";
+import { useDebounce } from "@/composable/useDebounce";
 
 const loading = ref(true);
 const jobs = ref<IJob[]>([]);
 const error = ref<string | null>(null);
 const searchQuery = ref("");
+const debouncedSearch = useDebounce<string>(searchQuery, 1000);
 const filters = ref({
-    role: "all",
+    status: "all",
 });
 const isEditModalOpen = ref(false);
-const selectedJob = ref<IJob | undefined>(undefined);
+const selectedJob = ref<IJob>();
 const submitting = ref(false);
 const successMessage = ref<string | null>(null);
 
@@ -27,6 +29,22 @@ const columns: TableColumn[] = [
     { key: "salary", label: "Salary Range" },
     { key: "location", label: "Location" },
 ];
+
+const filteredJob = computed(() => {
+    const query = debouncedSearch.value.toLowerCase();
+    return jobs.value.filter((user) => {
+        const matchesSearch =
+            !query ||
+            user.title?.toLowerCase().includes(query) ||
+            user.jobType?.toLowerCase().includes(query) ||
+            user.location?.toLowerCase().includes(query);
+        const matchesRole =
+            filters.value.status === "all" ||
+            user.status === filters.value.status;
+
+        return matchesSearch && matchesRole;
+    });
+});
 
 const fetchJobs = async () => {
     try {
@@ -118,18 +136,19 @@ onUnmounted(() => {
     jobs.value = [];
 });
 </script>
-
 <template>
-    <main class="flex-1 p-6">
-        <!-- Header -->
+    <main
+        class="flex-1 p-6 bg-white darksssbg-zinc-950 transition-colors duration-300"
+    >
         <TitleDashboard
             title="Manage Jobs"
             subtitle="Manage and track job listings and applications."
+            class="text-zinc-900 darkssstext-zinc-100"
         >
             <template #action>
                 <router-link
                     to="/dashboard/add-job"
-                    class="bg-primary text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-primary/90 transition-colors"
+                    class="bg-primary text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-sm active:scale-95"
                 >
                     <span class="material-symbols-outlined text-xl">add</span>
                     Add Job
@@ -137,7 +156,6 @@ onUnmounted(() => {
             </template>
         </TitleDashboard>
 
-        <!-- Error Message -->
         <transition
             enter-active-class="transition-all duration-300"
             leave-active-class="transition-all duration-300"
@@ -146,25 +164,29 @@ onUnmounted(() => {
         >
             <div
                 v-if="error"
-                class="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+                class="mb-6 p-4 rounded-lg bg-red-50 darksssbg-red-950/30 border border-red-200 darksssborder-red-900/50"
             >
                 <div class="flex items-start gap-3">
                     <span
-                        class="material-symbols-outlined text-red-600 dark:text-red-400 flex-shrink-0"
+                        class="material-symbols-outlined text-red-600 darkssstext-red-400 flex-shrink-0"
                     >
                         error
                     </span>
                     <div class="flex-1">
-                        <p class="font-semibold text-red-800 dark:text-red-200">
+                        <p
+                            class="font-semibold text-red-800 darkssstext-red-200"
+                        >
                             Error
                         </p>
-                        <p class="text-sm text-red-700 dark:text-red-300 mt-1">
+                        <p
+                            class="text-sm text-red-700 darkssstext-red-300 mt-1"
+                        >
                             {{ error }}
                         </p>
                     </div>
                     <button
                         @click="dismissError"
-                        class="text-red-400 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                        class="text-red-400 hover:text-red-600 darkssstext-red-500 darkssshover:text-red-300 transition-colors"
                     >
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -172,7 +194,6 @@ onUnmounted(() => {
             </div>
         </transition>
 
-        <!-- Success Message -->
         <transition
             enter-active-class="transition-all duration-300"
             leave-active-class="transition-all duration-300"
@@ -181,29 +202,29 @@ onUnmounted(() => {
         >
             <div
                 v-if="successMessage"
-                class="mb-6 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+                class="mb-6 p-4 rounded-lg bg-green-50 darksssbg-green-950/30 border border-green-200 darksssborder-green-900/50"
             >
                 <div class="flex items-start gap-3">
                     <span
-                        class="material-symbols-outlined text-green-600 dark:text-green-400 flex-shrink-0"
+                        class="material-symbols-outlined text-green-600 darkssstext-green-400 flex-shrink-0"
                     >
                         check_circle
                     </span>
-                    <div>
+                    <div class="flex-1">
                         <p
-                            class="font-semibold text-green-800 dark:text-green-200"
+                            class="font-semibold text-green-800 darkssstext-green-200"
                         >
                             Success
                         </p>
                         <p
-                            class="text-sm text-green-700 dark:text-green-300 mt-1"
+                            class="text-sm text-green-700 darkssstext-green-300 mt-1"
                         >
                             {{ successMessage }}
                         </p>
                     </div>
                     <button
                         @click="dismissSuccess"
-                        class="text-green-400 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
+                        class="text-green-400 hover:text-green-600 darkssstext-green-500 darkssshover:text-green-300 transition-colors"
                     >
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -211,76 +232,88 @@ onUnmounted(() => {
             </div>
         </transition>
 
-        <!-- Filters -->
-        <FilterandSearch
-            v-model:search="searchQuery"
-            v-model="filters"
-            :selects="[
-                {
-                    key: 'role',
-                    label: 'Role',
-                    options: [
-                        { label: 'All Roles', value: 'all' },
-                        { label: 'Admin', value: 'admin' },
-                        { label: 'Candidate', value: 'candidate' },
-                    ],
-                },
-            ]"
-            search-placeholder="Name or email..."
-        />
+        <div
+            class="mb-6 p-4 rounded-xl bg-zinc-50 darksssbg-zinc-900/50 border border-zinc-200 darksssborder-zinc-800"
+        >
+            <FilterandSearch
+                v-model:search="searchQuery"
+                v-model="filters"
+                :selects="[
+                    {
+                        key: 'role',
+                        label: 'Role',
+                        options: [
+                            { label: 'All Roles', value: 'all' },
+                            { label: 'Open', value: 'open' },
+                            { label: 'Close', value: 'close' },
+                        ],
+                    },
+                ]"
+                search-placeholder="Search jobs..."
+            />
+        </div>
 
-        <!-- Jobs Table -->
-        <BaseTable :columns="columns" :items="jobs" :loading="loading">
-            <!-- Custom Salary Slot -->
-            <template #salary="{ item }">
-                IDR {{ item.salaryMin?.toLocaleString() }} -
-                {{ item.salaryMax?.toLocaleString() }}
-            </template>
-
-            <!-- Custom Location Badge -->
-            <template #location="{ item }">
-                <span
-                    :class="
-                        item.location === 'remote'
-                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                            : item.location === 'onsite'
-                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                    "
-                    class="px-2.5 py-1 rounded-full text-xs font-bold capitalize"
-                >
-                    {{ item.location }}
-                </span>
-            </template>
-
-            <!-- Actions Slot -->
-            <template #actions="{ item }">
-                <div class="flex justify-end gap-2">
-                    <!-- Edit Button -->
-                    <button
-                        @click="handleEditClick(item)"
-                        class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                        title="Edit job"
+        <div
+            class="rounded-xl border border-zinc-200 darksssborder-zinc-800 overflow-hidden bg-white darksssbg-zinc-900 shadow-sm"
+        >
+            <BaseTable
+                :columns="columns"
+                :items="filteredJob"
+                :loading="loading"
+            >
+                <template #salary="{ item }">
+                    <span
+                        class="text-zinc-700 darkssstext-zinc-300 font-medium"
                     >
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
+                        IDR {{ item.salaryMin?.toLocaleString() }} -
+                        {{ item.salaryMax?.toLocaleString() }}
+                    </span>
+                </template>
 
-                    <!-- Delete Button -->
-                    <button
-                        @click="handleDelete(item)"
-                        class="p-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                        title="Delete job"
+                <template #location="{ item }">
+                    <span
+                        :class="
+                            item.location === 'remote'
+                                ? 'bg-emerald-100 text-emerald-700 darksssbg-emerald-900/30 darkssstext-emerald-400'
+                                : item.location === 'onsite'
+                                  ? 'bg-blue-100 text-blue-700 darksssbg-blue-900/30 darkssstext-blue-400'
+                                  : 'bg-violet-100 text-violet-700 darksssbg-violet-900/30 darkssstext-violet-400'
+                        "
+                        class="px-2.5 py-1 rounded-full text-xs font-bold capitalize inline-flex items-center"
                     >
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
-            </template>
-        </BaseTable>
+                        {{ item.location }}
+                    </span>
+                </template>
+
+                <template #actions="{ item }">
+                    <div class="flex justify-end gap-1">
+                        <button
+                            @click="handleEditClick(item)"
+                            class="p-2 text-zinc-600 darkssstext-zinc-400 hover:text-primary darkssshover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                            title="Edit job"
+                        >
+                            <span class="material-symbols-outlined text-[20px]"
+                                >edit</span
+                            >
+                        </button>
+
+                        <button
+                            @click="handleDelete(item)"
+                            class="p-2 text-zinc-600 darkssstext-zinc-400 hover:text-red-500 darkssshover:text-red-400 hover:bg-red-50 darkssshover:bg-red-900/20 rounded-lg transition-all"
+                            title="Delete job"
+                        >
+                            <span class="material-symbols-outlined text-[20px]"
+                                >delete</span
+                            >
+                        </button>
+                    </div>
+                </template>
+            </BaseTable>
+        </div>
     </main>
 
-    <!-- Edit Job Modal -->
     <EditModal
-        :is-open="isEditModalOpen"
+        v-if="isEditModalOpen"
         :job="selectedJob"
         :loading="submitting"
         @close="handleEditModalClose"

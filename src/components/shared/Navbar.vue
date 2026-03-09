@@ -104,7 +104,7 @@ onUnmounted(() => {
                         to="/register"
                         class="inline-flex items-center justify-center px-5 py-2 text-sm font-bold bg-primary hover:bg-primary/90 rounded-lg shadow-sm transition-all duration-300 text-white hover:shadow-lg hover:scale-105"
                     >
-                        Signin
+                        Sign In
                     </router-link>
 
                     <!-- Show User Profile Menu jika sudah login -->
@@ -314,7 +314,7 @@ onUnmounted(() => {
                         @click="closeMenu"
                         class="w-full flex items-center justify-center px-4 py-3 text-sm font-bold bg-primary hover:bg-primary/90 rounded-lg shadow-sm transition-all duration-300 text-white"
                     >
-                        Signin
+                        Sign In
                     </router-link>
 
                     <!-- Mobile User Menu - Show jika sudah login -->

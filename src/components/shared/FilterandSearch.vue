@@ -34,7 +34,7 @@ const updateSelect = (key: string, value: string) => {
 
 <template>
     <div
-        class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap gap-4 items-end mb-6"
+        class="bg-white p-4 rounded-xl border border-slate-200 darksssborder-slate-800 flex flex-wrap gap-4 items-end mb-6"
     >
         <!-- Search -->
         <div v-if="search !== undefined" class="flex-1 min-w-[220px]">
@@ -58,7 +58,7 @@ const updateSelect = (key: string, value: string) => {
                         )
                     "
                     :placeholder="searchPlaceholder || 'Search...'"
-                    class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none"
+                    class="w-full pl-10 pr-4 py-2 bg-slate-50 text-slate-700 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none"
                     type="text"
                 />
             </div>
@@ -79,7 +79,7 @@ const updateSelect = (key: string, value: string) => {
                         ($event.target as HTMLSelectElement).value,
                     )
                 "
-                class="w-full py-2 px-3 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-primary outline-none"
+                class="w-full py-2 px-3 bg-slate-50 darksssbg-slate-800 border-none rounded-lg text-sm text-slate-700 darkssstext-slate-300 focus:ring-2 focus:ring-primary outline-none"
             >
                 <option
                     v-for="option in filter.options"

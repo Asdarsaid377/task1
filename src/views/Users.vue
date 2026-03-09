@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import type { IUser } from "@/types/UserType";
 import { userService } from "@/services/user.service";
 import FilterandSearch from "@/components/shared/FilterandSearch.vue";
+import TitleDashboard from "@/components/shared/TitleDashboard.vue";
+import { useDebounce } from "@/composable/useDebounce";
+import BaseTable, { type TableColumn } from "@/components/table/BaseTable.vue";
 
 // State
 const loading = ref(true);
 const deleting = ref(false);
 const users = ref<IUser[]>([]);
 
-const roleFilter = ref<"admin" | "candidate">();
 const selectedUser = ref<IUser | null>(null);
 const showDeleteModal = ref(false);
 const showEditRoleModal = ref(false);
@@ -20,14 +22,19 @@ const searchQuery = ref("");
 const filters = ref({
     role: "all",
 });
+const debouncedSearch = useDebounce<string>(searchQuery, 1000);
 
 // Computed
 const filteredUsers = computed(() => {
+    const query = debouncedSearch.value.toLowerCase();
     return users.value.filter((user) => {
-        const matchesSearch = user.displayName;
-        // .toLowerCase()
-        // .includes(searchQuery.value.toLowerCase());
-        const matchesRole = !roleFilter.value || user.role === roleFilter.value;
+        const matchesSearch =
+            !query ||
+            user.displayName?.toLowerCase().includes(query) ||
+            user.email?.toLowerCase().includes(query);
+        const matchesRole =
+            filters.value.role === "all" || user.role === filters.value.role;
+
         return matchesSearch && matchesRole;
     });
 });
@@ -137,6 +144,13 @@ const dismissError = () => {
     error.value = null;
 };
 
+const columns: TableColumn[] = [
+    { key: "user", label: "User" },
+    { key: "email", label: "Email" },
+    { key: "role", label: "Role" },
+    { key: "createdAt", label: "Joined Date" },
+];
+
 // Lifecycle
 onMounted(() => {
     fetchUsers();
@@ -149,16 +163,11 @@ onMounted(() => {
         <div
             class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8"
         >
-            <div>
-                <h1
-                    class="text-3xl font-black tracking-tight text-slate-900 dark:text-white"
-                >
-                    Manage Users
-                </h1>
-                <p class="text-slate-500 text-base mt-1">
-                    View, edit roles, and manage system users.
-                </p>
-            </div>
+            <TitleDashboard
+                title="Manage Users"
+                subtitle="View, edit roles, and manage system users."
+                class="text-zinc-900 darkssstext-zinc-100"
+            />
             <button
                 @click="fetchUsers"
                 class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
@@ -171,24 +180,24 @@ onMounted(() => {
         <!-- Error Message -->
         <div
             v-if="error"
-            class="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+            class="mb-6 p-4 rounded-lg bg-red-50 darksssbg-red-900/20 border border-red-200 darksssborder-red-800"
         >
             <div class="flex items-start gap-3">
                 <span
-                    class="material-symbols-outlined text-red-600 dark:text-red-400 flex-shrink-0"
+                    class="material-symbols-outlined text-red-600 darkssstext-red-400"
                 >
                     error
                 </span>
                 <div class="flex-1">
                     <p
-                        class="text-sm font-medium text-red-800 dark:text-red-200"
+                        class="text-sm font-medium text-red-800 darkssstext-red-200"
                     >
                         {{ error }}
                     </p>
                 </div>
                 <button
                     @click="dismissError"
-                    class="text-red-400 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                    class="text-red-400 hover:text-red-600 darkssstext-red-400 darkssshover:text-red-300"
                 >
                     <span class="material-symbols-outlined text-xl">close</span>
                 </button>
@@ -214,7 +223,7 @@ onMounted(() => {
 
         <!-- Users Table -->
         <div
-            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
+            class="bg-white rounded-xl border border-slate-200 darksssborder-slate-800 overflow-hidden shadow-sm"
         >
             <!-- Loading State -->
             <div v-if="loading" class="p-8 text-center">
@@ -233,7 +242,7 @@ onMounted(() => {
             <!-- Empty State -->
             <div v-else-if="filteredUsers.length === 0" class="p-8 text-center">
                 <span
-                    class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600 inline-block mb-3"
+                    class="material-symbols-outlined text-5xl text-slate-300 darkssstext-slate-600 inline-block mb-3"
                 >
                     person_off
                 </span>
@@ -241,159 +250,84 @@ onMounted(() => {
             </div>
 
             <!-- Table -->
-            <div v-else class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr
-                            class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800"
-                        >
-                            <th
-                                class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
-                            >
-                                User
-                            </th>
-                            <th
-                                class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
-                            >
-                                Email
-                            </th>
-                            <th
-                                class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
-                            >
-                                Role
-                            </th>
-                            <th
-                                class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider"
-                            >
-                                Joined Date
-                            </th>
-                            <th
-                                class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right"
-                            >
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody
-                        class="divide-y divide-slate-100 dark:divide-slate-800"
-                    >
-                        <tr
-                            v-for="user in filteredUsers"
-                            :key="user.uid"
-                            class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
-                        >
-                            <!-- User Column -->
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0"
-                                    >
-                                        <img
-                                            v-if="user.photoURL"
-                                            :src="user.photoURL"
-                                            :alt="user.displayName"
-                                            class="w-full h-full object-cover"
-                                        />
-                                        <span
-                                            v-else
-                                            class="material-symbols-outlined text-lg text-slate-500"
-                                        >
-                                            account_circle
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <p
-                                            class="font-semibold text-slate-900 dark:text-white"
-                                        >
-                                            {{ user.displayName }}
-                                        </p>
-                                        <p class="text-xs text-slate-500">
-                                            ID:
-                                            {{ user.uid.substring(0, 8) }}...
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <!-- Email Column -->
-                            <td class="px-6 py-4">
-                                <p
-                                    class="text-sm text-slate-700 dark:text-slate-300"
-                                >
-                                    {{ user.email }}
-                                </p>
-                            </td>
-
-                            <!-- Role Column -->
-                            <td class="px-6 py-4">
-                                <span
-                                    class="px-2.5 py-1 rounded-full text-xs font-bold"
-                                    :class="
-                                        user.role === 'admin'
-                                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                                            : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                                    "
-                                >
-                                    {{ user.role }}
-                                </span>
-                            </td>
-
-                            <!-- Joined Date Column -->
-                            <td class="px-6 py-4 text-sm text-slate-500">
-                                {{ formatDate(user.createdAt) }}
-                            </td>
-
-                            <!-- Actions Column -->
-                            <td class="px-6 py-4">
-                                <div
-                                    class="flex items-center justify-end gap-2"
-                                >
-                                    <!-- Edit Role Button -->
-                                    <button
-                                        @click="openEditRoleModal(user)"
-                                        class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
-                                        title="Edit Role"
-                                    >
-                                        <span
-                                            class="material-symbols-outlined text-xl"
-                                            >edit</span
-                                        >
-                                    </button>
-
-                                    <!-- Delete Button -->
-                                    <button
-                                        @click="openDeleteModal(user)"
-                                        class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                                        title="Delete User"
-                                    >
-                                        <span
-                                            class="material-symbols-outlined text-xl"
-                                            >delete</span
-                                        >
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- Pagination Info -->
-            <div
-                v-if="!loading && filteredUsers.length > 0"
-                class="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800"
+            <BaseTable
+                v-else
+                :columns="columns"
+                :items="filteredUsers"
+                :loading="loading"
             >
-                <p class="text-sm text-slate-500">
-                    Showing
-                    <span class="font-semibold text-slate-900 dark:text-white">
-                        {{ filteredUsers.length }}
+                <template #user="{ item }">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="size-10 rounded-full bg-slate-200 darksssbg-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0"
+                        >
+                            <img
+                                v-if="item.photoURL"
+                                :src="item.photoURL"
+                                :alt="item.displayName"
+                                class="w-full h-full object-cover"
+                            />
+                            <span
+                                v-else
+                                class="material-symbols-outlined text-lg text-slate-500"
+                            >
+                                account_circle
+                            </span>
+                        </div>
+                        <div>
+                            <p
+                                class="font-semibold text-slate-900 darkssstext-white"
+                            >
+                                {{ item.displayName }}
+                            </p>
+                            <p class="text-xs text-slate-500">
+                                ID:
+                                {{ item.uid.substring(0, 8) }}...
+                            </p>
+                        </div>
+                    </div>
+                </template>
+                <template #role="{ item }">
+                    <span
+                        class="px-2.5 py-1 rounded-full text-xs font-bold"
+                        :class="
+                            item.role === 'admin'
+                                ? 'bg-purple-100 text-purple-700 darksssbg-purple-900/30 darkssstext-purple-400'
+                                : 'bg-blue-100 text-blue-700 darksssbg-blue-900/30 darkssstext-blue-400'
+                        "
+                    >
+                        {{ item.role }}
                     </span>
-                    of
-                    <span class="font-semibold text-slate-900 dark:text-white">
-                        {{ users.length }}
-                    </span>
-                    users
-                </p>
-            </div>
+                </template>
+                <template #createdAt="{ item }">
+                    {{ formatDate(item.createdAt) }}
+                </template>
+                <template #actions="{ item }">
+                    <div class="flex items-center justify-end gap-2">
+                        <!-- Edit Role Button -->
+                        <button
+                            @click="openEditRoleModal(item)"
+                            class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                            title="Edit Role"
+                        >
+                            <span class="material-symbols-outlined text-xl"
+                                >edit</span
+                            >
+                        </button>
+
+                        <!-- Delete Button -->
+                        <button
+                            @click="openDeleteModal(item)"
+                            class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 darkssshover:bg-red-900/20 rounded-lg transition-all"
+                            title="Delete User"
+                        >
+                            <span class="material-symbols-outlined text-xl"
+                                >delete</span
+                            >
+                        </button>
+                    </div>
+                </template>
+            </BaseTable>
         </div>
     </main>
 
@@ -411,19 +345,19 @@ onMounted(() => {
                 @click.self="closeEditRoleModal"
             >
                 <div
-                    class="bg-white dark:bg-slate-900 rounded-xl shadow-xl max-w-md w-full p-6 animate-in"
+                    class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-in"
                     @click.stop
                 >
                     <!-- Header -->
                     <div class="flex items-center justify-between mb-4">
                         <h2
-                            class="text-xl font-bold text-slate-900 dark:text-white"
+                            class="text-xl font-bold text-slate-900 darkssstext-white"
                         >
                             Edit User Role
                         </h2>
                         <button
                             @click="closeEditRoleModal"
-                            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                            class="text-slate-400 hover:text-slate-600 darkssshover:text-slate-300"
                         >
                             <span class="material-symbols-outlined">close</span>
                         </button>
@@ -431,15 +365,17 @@ onMounted(() => {
 
                     <!-- User Info -->
                     <div
-                        class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg mb-6"
+                        class="bg-slate-50 darksssbg-slate-800 p-4 rounded-lg mb-6"
                     >
-                        <p class="text-sm text-slate-500 dark:text-slate-400">
+                        <p class="text-sm text-slate-500 darkssstext-slate-400">
                             User
                         </p>
-                        <p class="font-semibold text-slate-900 dark:text-white">
+                        <p
+                            class="font-semibold text-slate-900 darkssstext-white"
+                        >
                             {{ selectedUser?.displayName }}
                         </p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                        <p class="text-xs text-slate-500 darkssstext-slate-400">
                             {{ selectedUser?.email }}
                         </p>
                     </div>
@@ -447,15 +383,15 @@ onMounted(() => {
                     <!-- Role Selection -->
                     <div class="mb-6">
                         <label
-                            class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3"
+                            class="block text-sm font-semibold text-slate-700 darkssstext-slate-300 mb-3"
                         >
                             New Role
                         </label>
                         <div class="space-y-2">
                             <label
-                                class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                                class="flex items-center gap-3 p-3 border border-slate-200 darksssborder-slate-700 rounded-lg hover:bg-slate-50 darkssshover:bg-slate-800 cursor-pointer transition-colors"
                                 :class="{
-                                    'border-primary bg-primary/5 dark:bg-primary/10':
+                                    'border-primary bg-primary/5 darksssbg-primary/10':
                                         newRole === 'admin',
                                 }"
                             >
@@ -467,12 +403,12 @@ onMounted(() => {
                                 />
                                 <div>
                                     <p
-                                        class="font-medium text-slate-900 dark:text-white"
+                                        class="font-medium text-slate-900 darkssstext-white"
                                     >
                                         Admin
                                     </p>
                                     <p
-                                        class="text-xs text-slate-500 dark:text-slate-400"
+                                        class="text-xs text-slate-500 darkssstext-slate-400"
                                     >
                                         Full access to manage jobs and
                                         candidates
@@ -481,9 +417,9 @@ onMounted(() => {
                             </label>
 
                             <label
-                                class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                                class="flex items-center gap-3 p-3 border border-slate-200 darksssborder-slate-700 rounded-lg hover:bg-slate-50 darkssshover:bg-slate-800 cursor-pointer transition-colors"
                                 :class="{
-                                    'border-primary bg-primary/5 dark:bg-primary/10':
+                                    'border-primary bg-primary/5 darksssbg-primary/10':
                                         newRole === 'candidate',
                                 }"
                             >
@@ -495,12 +431,12 @@ onMounted(() => {
                                 />
                                 <div>
                                     <p
-                                        class="font-medium text-slate-900 dark:text-white"
+                                        class="font-medium text-slate-900 darkssstext-white"
                                     >
                                         Candidate
                                     </p>
                                     <p
-                                        class="text-xs text-slate-500 dark:text-slate-400"
+                                        class="text-xs text-slate-500 darkssstext-slate-400"
                                     >
                                         Can browse jobs and apply
                                     </p>
@@ -513,7 +449,7 @@ onMounted(() => {
                     <div class="flex gap-3">
                         <button
                             @click="closeEditRoleModal"
-                            class="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            class="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 darksssborder-slate-700 text-slate-700 darkssstext-slate-300 font-semibold hover:bg-slate-50 darkssshover:bg-slate-800 transition-colors"
                         >
                             Cancel
                         </button>
@@ -546,19 +482,19 @@ onMounted(() => {
                 @click.self="closeDeleteModal"
             >
                 <div
-                    class="bg-white dark:bg-slate-900 rounded-xl shadow-xl max-w-md w-full p-6"
+                    class="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
                     @click.stop
                 >
                     <!-- Header -->
                     <div class="flex items-center justify-between mb-4">
                         <h2
-                            class="text-xl font-bold text-slate-900 dark:text-white"
+                            class="text-xl font-bold text-slate-900 darkssstext-white"
                         >
                             Delete User
                         </h2>
                         <button
                             @click="closeDeleteModal"
-                            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                            class="text-slate-400 hover:text-slate-600 darkssshover:text-slate-300"
                         >
                             <span class="material-symbols-outlined">close</span>
                         </button>
@@ -566,22 +502,22 @@ onMounted(() => {
 
                     <!-- Warning -->
                     <div
-                        class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 rounded-lg mb-6"
+                        class="bg-red-50 darksssbg-red-900/20 border border-red-200 darksssborder-red-800 p-4 rounded-lg mb-6"
                     >
                         <div class="flex gap-3">
                             <span
-                                class="material-symbols-outlined text-red-600 dark:text-red-400 flex-shrink-0"
+                                class="material-symbols-outlined text-red-600 darkssstext-red-400 flex-shrink-0"
                             >
                                 warning
                             </span>
                             <div>
                                 <p
-                                    class="font-semibold text-red-800 dark:text-red-200 text-sm"
+                                    class="font-semibold text-red-800 darkssstext-red-200 text-sm"
                                 >
                                     This action cannot be undone
                                 </p>
                                 <p
-                                    class="text-xs text-red-700 dark:text-red-300 mt-1"
+                                    class="text-xs text-red-700 darkssstext-red-300 mt-1"
                                 >
                                     The user and all their data will be
                                     permanently deleted from the system.
@@ -592,15 +528,17 @@ onMounted(() => {
 
                     <!-- User Info -->
                     <div
-                        class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg mb-6"
+                        class="bg-slate-50 darksssbg-slate-800 p-4 rounded-lg mb-6"
                     >
-                        <p class="text-sm text-slate-500 dark:text-slate-400">
+                        <p class="text-sm text-slate-500 darkssstext-slate-400">
                             User to delete
                         </p>
-                        <p class="font-semibold text-slate-900 dark:text-white">
+                        <p
+                            class="font-semibold text-slate-900 darkssstext-white"
+                        >
                             {{ selectedUser?.displayName }}
                         </p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                        <p class="text-xs text-slate-500 darkssstext-slate-400">
                             {{ selectedUser?.email }}
                         </p>
                     </div>
@@ -608,7 +546,7 @@ onMounted(() => {
                     <!-- Confirmation Input -->
                     <div class="mb-6">
                         <label
-                            class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                            class="block text-sm font-semibold text-slate-700 darkssstext-slate-300 mb-2"
                         >
                             Type email to confirm deletion:
                         </label>
@@ -616,10 +554,10 @@ onMounted(() => {
                             v-model="deleteConfirmEmail"
                             :placeholder="selectedUser?.email"
                             type="text"
-                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 darksssborder-slate-700 bg-white darksssbg-slate-800 text-slate-900 darkssstext-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
                         />
                         <p
-                            class="text-xs text-slate-500 dark:text-slate-400 mt-2"
+                            class="text-xs text-slate-500 darkssstext-slate-400 mt-2"
                         >
                             This is a safety measure to prevent accidental
                             deletion.
@@ -630,7 +568,7 @@ onMounted(() => {
                     <div class="flex gap-3">
                         <button
                             @click="closeDeleteModal"
-                            class="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            class="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 darksssborder-slate-700 text-slate-700 darkssstext-slate-300 font-semibold hover:bg-slate-50 darkssshover:bg-slate-800 transition-colors"
                         >
                             Cancel
                         </button>

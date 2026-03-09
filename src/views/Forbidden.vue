@@ -39,10 +39,13 @@ const goBack = () => {
 
             <!-- Title -->
             <h1 class="text-4xl font-bold text-slate-900 mb-3">
-                404 Not Found
+                403 Forbidden
             </h1>
 
-            <p class="text-slate-600 mb-8">Page not found</p>
+            <p class="text-slate-600 mb-8">
+                You don't have permission to access this page. Please contact an
+                administrator if you believe this is a mistake.
+            </p>
 
             <!-- Buttons -->
             <div class="flex justify-center gap-4">

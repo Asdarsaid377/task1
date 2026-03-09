@@ -177,7 +177,7 @@ const dismissError = () => {
         class="flex flex-1 justify-center items-center min-h-screen py-12 px-6"
     >
         <div
-            class="layout-content-container flex flex-col max-w-[480px] w-full bg-white dark:bg-slate-900/50 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
+            class="layout-content-container flex flex-col max-w-[480px] w-full bg-white /50 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800"
         >
             <div class="flex flex-col items-center text-center gap-6 mb-8">
                 <div

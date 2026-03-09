@@ -8,8 +8,11 @@ import { jobService } from "@/services/job.service";
 import { AiFillSchedule } from "vue-icons-plus/ai";
 import { BiMoneyWithdraw } from "vue-icons-plus/bi";
 import { EpLocation } from "vue-icons-plus/ep";
+import TitleDashboard from "../shared/TitleDashboard.vue";
 
-const formJob = reactive<Omit<IJob, "id" | "createdBy">>({
+const formJob = reactive<
+    Omit<IJob, "id" | "createdBy"> & { requirements: string[] }
+>({
     title: "",
     location: "",
     salaryMin: 0,
@@ -24,36 +27,48 @@ const router = useRouter();
 const errors = ref<{ [key: string]: string }>({});
 const newRequirement = ref("");
 const showPreview = ref(false);
+const loading = ref(false);
+const editingIndex = ref<number | null>(null);
+const editingRequirement = ref<string>("");
 
 const removeRequirement = (index: number) => {
-    if (formJob.requirements) {
-        const removed = formJob.requirements.splice(index, 1);
-        console.log("❌ Requirement removed:", removed[0]);
-    }
+    const removed = formJob.requirements.splice(index, 1);
 };
 
 const addRequirement = () => {
     if (!newRequirement.value.trim()) return;
-
-    if (!formJob.requirements) {
-        formJob.requirements = [];
-    }
-
-    formJob.requirements.push(newRequirement.value.trim());
+    formJob.requirements.push(newRequirement.value);
     newRequirement.value = "";
-    console.log("✅ Requirement added:", formJob.requirements);
+};
+
+const startEditRequirement = (index: number) => {
+    editingIndex.value = index;
+    editingRequirement.value = formJob.requirements[index] || "";
+};
+
+const saveRequirement = () => {
+    if (editingIndex.value === null) return;
+    formJob.requirements[editingIndex.value] = editingRequirement.value;
+    editingIndex.value = null;
+    editingRequirement.value = "";
+};
+
+const cancelEdit = () => {
+    editingIndex.value = null;
+    editingRequirement.value = "";
 };
 
 const handleSubmitJob = async () => {
-    console.log(formJob.location);
+    loading.value = true;
     try {
         const add = await jobService.addJob(formJob);
         if (add) {
             router.push("/dashboard/manage-job");
         }
-        console.log("Job added with ID:", add.id);
+        loading.value = false;
     } catch (error) {
         console.error("Error adding job:", error);
+        loading.value = false;
     }
 };
 const seePreview = () => {
@@ -64,14 +79,11 @@ const seePreview = () => {
 <template>
     <main class="flex-1 overflow-y-auto bg-background-light">
         <div class="max-w-7xl mx-auto">
-            <div class="mb-8">
-                <h1 class="text-3xl font-black text-slate-900 tracking-tight">
-                    Post New Job
-                </h1>
-                <p class="text-slate-500 mt-2">
-                    Fill in the details below to find your next great hire.
-                </p>
-            </div>
+            <TitleDashboard
+                title="Post New Job"
+                subtitle="Fill in the details below to find your next great hire."
+                class="text-zinc-900 darkssstext-zinc-100"
+            />
             <form @submit.prevent="handleSubmitJob" class="space-y-6">
                 <!-- Card: Basic Information -->
                 <div
@@ -89,7 +101,7 @@ const seePreview = () => {
                             <input
                                 v-model="formJob.title"
                                 required="true"
-                                class="w-full rounded-lg border-slate-200 border px-4 py-3"
+                                class="w-full rounded-lg text-slate-700 border-slate-200 border px-4 py-3"
                                 placeholder="e.g. Senior Full Stack Engineer"
                                 type="text"
                             />
@@ -101,7 +113,7 @@ const seePreview = () => {
                             >
                             <select
                                 v-model="formJob.jobType"
-                                class="w-full rounded-lg border-slate-200 border focus:ring-primary focus:border-primary px-4 py-3"
+                                class="w-full rounded-lg text-slate-700 border-slate-200 border focus:ring-primary focus:border-primary px-4 py-3"
                             >
                                 <option value="full-time">Full-time</option>
                                 <option value="part-time">Part-time</option>
@@ -122,8 +134,8 @@ const seePreview = () => {
                                     :class="[
                                         'flex-1 flex items-center justify-center border-2 rounded-lg p-3 cursor-pointer transition-all',
                                         formJob.location === 'remote'
-                                            ? 'border-primary bg-primary/5'
-                                            : 'border-slate-200',
+                                            ? 'border-primary bg-primary/5 text-primary'
+                                            : 'border-slate-200 text-slate-600',
                                     ]"
                                 >
                                     <span
@@ -177,7 +189,7 @@ const seePreview = () => {
                                     >
                                     <input
                                         v-model="formJob.salaryMin"
-                                        class="w-full pl-8 rounded-lg border-slate-200 border focus:ring-primary focus:border-primary py-3"
+                                        class="w-full pl-8 rounded-lg text-slate-700 border-slate-200 border focus:ring-primary focus:border-primary py-3"
                                         placeholder="Min"
                                         type="number"
                                     />
@@ -190,7 +202,7 @@ const seePreview = () => {
                                     >
                                     <input
                                         v-model="formJob.salaryMax"
-                                        class="w-full pl-8 rounded-lg border-slate-200 border py-3"
+                                        class="w-full pl-8 rounded-lg text-slate-700 border-slate-200 border focus:ring-primary focus:border-primary py-3"
                                         placeholder="Max"
                                         type="number"
                                     />
@@ -208,7 +220,7 @@ const seePreview = () => {
                     </h3>
                     <textarea
                         v-model="formJob.description"
-                        class="w-full min-h-48 rounded-lg border-slate-200 border focus:ring-primary focus:border-primary px-4 py-3"
+                        class="w-full min-h-48 rounded-lg text-slate-700 border-slate-200 border focus:ring-primary focus:border-primary px-4 py-3"
                         placeholder="Describe the role, responsibilities, and qualifications..."
                     />
 
@@ -217,7 +229,7 @@ const seePreview = () => {
                     </h3>
                     <div>
                         <label
-                            class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                            class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                         >
                             Requirements <span class="text-red-500">*</span>
                         </label>
@@ -229,7 +241,7 @@ const seePreview = () => {
                                 type="text"
                                 placeholder="e.g., 5+ years of experience"
                                 @keyup.enter="addRequirement"
-                                class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                             />
                             <button
                                 @click="addRequirement"
@@ -245,29 +257,64 @@ const seePreview = () => {
                             <div
                                 v-for="(req, index) in formJob.requirements"
                                 :key="index"
-                                class="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700"
+                                class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border"
                             >
-                                <span
-                                    class="text-sm text-slate-700 dark:text-slate-300"
-                                >
-                                    {{ req }}
-                                </span>
-                                <button
-                                    @click="removeRequirement(index)"
-                                    type="button"
-                                    class="text-red-500 hover:text-red-700 transition-colors"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-lg"
-                                        >close</span
-                                    >
-                                </button>
+                                <!-- Mode Edit -->
+                                <template v-if="editingIndex === index">
+                                    <input
+                                        v-model="editingRequirement"
+                                        class="flex-1 px-3 py-1 text-slate-700 border rounded"
+                                    />
+                                    <div class="flex gap-2 ml-2">
+                                        <button
+                                            @click="saveRequirement"
+                                            class="text-green-600"
+                                        >
+                                            Save
+                                        </button>
+
+                                        <button
+                                            @click="cancelEdit"
+                                            class="text-gray-500"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </template>
+
+                                <!-- Mode View -->
+                                <template v-else>
+                                    <span class="text-sm text-slate-700">
+                                        {{ req }}
+                                    </span>
+
+                                    <div class="flex gap-3">
+                                        <button
+                                            @click="startEditRequirement(index)"
+                                            class="text-blue-500"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-xl"
+                                                >edit</span
+                                            >
+                                        </button>
+
+                                        <button
+                                            @click="removeRequirement(index)"
+                                            class="text-red-500"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-xl"
+                                                >close</span
+                                            >
+                                        </button>
+                                    </div>
+                                </template>
                             </div>
                         </div>
-
                         <p
                             v-if="errors.requirements"
-                            class="text-xs text-red-600 dark:text-red-400 mt-1"
+                            class="text-xs text-red-600 darksss:text-red-400 mt-1"
                         >
                             {{ errors.requirements }}
                         </p>
@@ -288,6 +335,7 @@ const seePreview = () => {
                         Preview
                     </button>
                     <button
+                        :disabled="loading"
                         class="px-10 py-3 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
                         type="submit"
                     >
@@ -351,7 +399,7 @@ const seePreview = () => {
                         {{ formJob?.description }}
                     </p>
                     <h3
-                        class="text-slate-900 dark:text-slate-100 font-bold mt-6 mb-2"
+                        class="text-slate-900 darksss:text-slate-100 font-bold mt-6 mb-2"
                     >
                         Requirements
                     </h3>

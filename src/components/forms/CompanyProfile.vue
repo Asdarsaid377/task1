@@ -119,7 +119,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                         </div>
                     </section>
                     <section
-                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 border dark:border-slate-800 p-6"
+                        class="bg-white rounded-xl border border-slate-200 border dark:border-slate-800 p-6"
                     >
                         <h2
                             class="text-lg font-bold mb-6 flex items-center gap-2"
@@ -176,7 +176,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                                     /></span>
                                     <input
                                         class="w-full pl-10 p-3 rounded-lg border-slate-200 border dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                        placeholder="https://www.jobsync.com"
+                                        placeholder="https://www.CWF.com"
                                         type="url"
                                     />
                                 </div>
@@ -184,7 +184,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                         </div>
                     </section>
                     <section
-                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 border dark:border-slate-800 p-6"
+                        class="bg-white rounded-xl border border-slate-200 border dark:border-slate-800 p-6"
                     >
                         <h2
                             class="text-lg font-bold mb-6 flex items-center gap-2"
@@ -233,7 +233,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                             Applicant Preview
                         </p>
                         <div
-                            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 border dark:border-slate-800 overflow-hidden shadow-sm"
+                            class="bg-white rounded-xl border border-slate-200 border dark:border-slate-800 overflow-hidden shadow-sm"
                         >
                             <div class="h-24 bg-primary relative">
                                 <div
@@ -244,7 +244,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                             <div class="px-5 pb-6">
                                 <div class="relative -mt-10 mb-4">
                                     <div
-                                        class="size-20 rounded-xl bg-white dark:bg-slate-900 p-1 shadow-md border border-slate-100 dark:border-slate-800"
+                                        class="size-20 rounded-xl bg-white p-1 shadow-md border border-slate-100 dark:border-slate-800"
                                     >
                                         <div
                                             class="w-full h-full rounded-lg bg-primary/10 flex items-center justify-center"
@@ -257,7 +257,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                                     </div>
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-900">
-                                    JobSync Analytics
+                                    CWF Analytics
                                 </h3>
                                 <p
                                     class="text-xs text-primary font-bold mt-1 uppercase tracking-tight"
@@ -292,7 +292,7 @@ We are a leading data analytics firm specializing in workforce optimization and 
                                         /></span>
                                         <span
                                             class="text-xs text-primary hover:underline cursor-pointer"
-                                            >jobsync.com</span
+                                            >CWF.com</span
                                         >
                                     </div>
                                 </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { dummyJobs } from "@/common/dummyData";
+import { useDebounce } from "@/composable/useDebounce";
 import { jobService } from "@/services/job.service";
 import type { IJob } from "@/types/JobType";
 import { ref, computed, onMounted, onUnmounted } from "vue";
@@ -7,6 +7,7 @@ import { Fa6LocationDot } from "vue-icons-plus/fa6";
 import { PiBriefcaseBold } from "vue-icons-plus/pi";
 
 const searchQuery = ref("");
+const debouncedSearch = useDebounce<string>(searchQuery, 1000);
 const selectedDept = ref("");
 const loading = ref(true);
 const jobs = ref<IJob[]>([]);
@@ -18,14 +19,15 @@ const uniqueJobTypes = computed(() => {
 });
 
 const filteredJobs = computed(() => {
+    const query = debouncedSearch.value.toLowerCase().trim();
     return jobs.value.filter((job) => {
         const matchesSearch =
-            job.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            job.location
-                .toLowerCase()
-                .includes(searchQuery.value.toLowerCase());
+            job.title.toLowerCase().includes(query) ||
+            job.location.toLowerCase().includes(query);
+
         const matchesDept =
             !selectedDept.value || job.jobType === selectedDept.value;
+
         return matchesSearch && matchesDept;
     });
 });
@@ -112,7 +114,7 @@ onUnmounted(() => {
             <div class="space-y-4">
                 <div
                     v-for="(job, index) in filteredJobs"
-                    :key="searchQuery + selectedDept"
+                    :key="job.id"
                     class="group flex flex-col md:flex-row items-center justify-between p-6 rounded-xl border border-slate-200 bg-white hover:border-primary/50 opacity-0 hover:shadow-2xl hover:scale-102 transition-all duration-300 cursor-pointer animate-fade-up"
                     :style="{ animationDelay: `${index * 0.6}s` }"
                 >
@@ -145,7 +147,8 @@ onUnmounted(() => {
                             <span
                                 class="px-2 py-0.5 rounded-full bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider"
                             >
-                                Rp. {{ job.salaryMin }} - {{ job.salaryMax }}
+                                Rp. {{ job.salaryMin.toLocaleString() }} -
+                                {{ job.salaryMax.toLocaleString() }}
                             </span>
                         </div>
                     </div>
@@ -171,16 +174,6 @@ onUnmounted(() => {
             </div>
 
             <!-- General Application CTA -->
-            <div class="mt-12 text-center animate-fade-up">
-                <p class="text-slate-500 text-sm mb-4">
-                    Don't see a role that fits? We're always looking for talent.
-                </p>
-                <button
-                    class="font-bold text-primary hover:underline underline-offset-4 hover:scale-105 transition-transform duration-300"
-                >
-                    Send a General Application
-                </button>
-            </div>
         </div>
     </section>
 </template>

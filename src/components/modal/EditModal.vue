@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, watchEffect } from "vue";
 import type { IJob } from "@/types/JobType";
 
 interface Props {
-    isOpen: boolean;
     job?: IJob;
     loading?: boolean;
 }
@@ -21,75 +20,41 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 // Form state
-const formData = ref<Partial<IJob>>({
-    title: "",
-    description: "",
-    location: "",
-    jobType: "full-time",
-    salaryMin: 0,
-    salaryMax: 0,
-    requirements: [],
-    status: "open",
-});
+const formData = ref<Partial<IJob>>({});
 
 const errors = ref<{ [key: string]: string }>({});
 const newRequirement = ref("");
+const editingIndex = ref<number | null>(null);
+const editingRequirement = ref<string>("");
 
 // ✅ WATCH isOpen PROP - Trigger saat modal dibuka
 watch(
-    () => props.isOpen,
-    (isOpen) => {
-        if (isOpen && props.job) {
-            console.log(
-                "Modal opened - Auto-populating form from job data:",
-                props.job,
-            );
+    () => props.job,
+    (job) => {
+        if (!job) return;
 
-            // Auto-populate form dengan data dari job prop
-            formData.value = {
-                id: props.job.id,
-                title: props.job.title || "",
-                description: props.job.description || "",
-                location: props.job.location || "",
-                jobType: props.job.jobType || "full-time",
-                salaryMin: props.job.salaryMin || 0,
-                salaryMax: props.job.salaryMax || 0,
-                requirements: props.job.requirements
-                    ? [...props.job.requirements]
-                    : [],
-                status: props.job.status || "open",
-                createdAt: props.job.createdAt,
-                createdBy: props.job.createdBy,
-            };
-
-            console.log(" Form successfully populated:", formData.value);
-        } else if (!isOpen) {
-            // Clear form saat modal ditutup
-            resetForm();
-        }
+        formData.value = {
+            id: job.id,
+            title: job.title,
+            description: job.description,
+            location: job.location,
+            jobType: job.jobType,
+            salaryMin: job.salaryMin,
+            salaryMax: job.salaryMax,
+            requirements: Array.isArray(job.requirements)
+                ? [...job.requirements]
+                : [],
+            status: job.status,
+            createdAt: job.createdAt,
+            createdBy: job.createdBy,
+        };
     },
+    { immediate: true },
 );
-
-// Reset form to initial state
-const resetForm = () => {
-    formData.value = {
-        title: "",
-        description: "",
-        location: "",
-        jobType: "full-time",
-        salaryMin: 0,
-        salaryMax: 0,
-        requirements: [],
-        status: "open",
-    };
-    errors.value = {};
-    newRequirement.value = "";
-};
 
 // Computed untuk check apakah form changed
 const isFormChanged = computed(() => {
     if (!props.job) return true;
-
     return (
         formData.value.title !== props.job.title ||
         formData.value.description !== props.job.description ||
@@ -132,14 +97,11 @@ const validateForm = (): boolean => {
 // Add requirement
 const addRequirement = () => {
     if (!newRequirement.value.trim()) return;
-
     if (!formData.value.requirements) {
         formData.value.requirements = [];
     }
-
     formData.value.requirements.push(newRequirement.value.trim());
     newRequirement.value = "";
-    console.log(" Requirement added:", formData.value.requirements);
 };
 
 // Remove requirement
@@ -150,23 +112,39 @@ const removeRequirement = (index: number) => {
     }
 };
 
+const startEditRequirement = (index: number) => {
+    editingIndex.value = index;
+    editingRequirement.value = formData.value.requirements?.[index] || "";
+};
+
+const saveRequirement = () => {
+    if (editingIndex.value === null || !formData.value.requirements) return;
+    formData.value.requirements[editingIndex.value] = editingRequirement.value;
+    editingIndex.value = null;
+    editingRequirement.value = "";
+};
+
+const cancelEdit = () => {
+    editingIndex.value = null;
+    editingRequirement.value = "";
+};
+
 // Handle submit
 const handleSubmit = () => {
-    console.log(" Form submit - Validating...");
+    // console.log(" Form submit - Validating...");
 
     if (!validateForm()) {
-        console.log("Validation failed:", errors.value);
+        // console.log("Validation failed:", errors.value);
         return;
     }
 
-    console.log("Validation passed - Submitting data:", formData.value);
+    // console.log("Validation passed - Submitting data:", formData.value);
     emit("submit", formData.value);
 };
 
 // Handle close
 const handleClose = () => {
-    console.log("❌ Modal closed");
-    resetForm();
+    // console.log("❌ Modal closed");
     emit("close");
 };
 </script>
@@ -181,35 +159,34 @@ const handleClose = () => {
             leave-to-class="opacity-0"
         >
             <div
-                v-if="isOpen"
                 class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                 @click.self="handleClose"
             >
                 <!-- Modal Container -->
                 <div
-                    class="bg-white dark:bg-slate-900 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                    class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                     @click.stop
                 >
                     <!-- Header -->
                     <div
-                        class="sticky top-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between"
+                        class="sticky top-0 bg-white border-b border-slate-200 darksss:border-slate-800 px-6 py-4 flex items-center justify-between"
                     >
                         <div>
                             <h2
-                                class="text-xl font-bold text-slate-900 dark:text-white"
+                                class="text-xl font-bold text-slate-900 darksss:text-white"
                             >
                                 Edit Job Listing
                             </h2>
                             <p
                                 v-if="job"
-                                class="text-xs text-slate-500 dark:text-slate-400 mt-1"
+                                class="text-xs text-slate-500 darksss:text-slate-400 mt-1"
                             >
                                 {{ job.title }}
                             </p>
                         </div>
                         <button
                             @click="handleClose"
-                            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                            class="text-slate-400 hover:text-slate-600 darksss:hover:text-slate-300 transition-colors"
                         >
                             <span class="material-symbols-outlined text-2xl"
                                 >close</span
@@ -222,7 +199,7 @@ const handleClose = () => {
                         <!-- Job Title -->
                         <div>
                             <label
-                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                             >
                                 Job Title <span class="text-red-500">*</span>
                             </label>
@@ -230,12 +207,12 @@ const handleClose = () => {
                                 v-model="formData.title"
                                 type="text"
                                 placeholder="e.g., Senior Frontend Developer"
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                 :class="{ 'border-red-500': errors.title }"
                             />
                             <p
                                 v-if="errors.title"
-                                class="text-xs text-red-600 dark:text-red-400 mt-1"
+                                class="text-xs text-red-600 darksss:text-red-400 mt-1"
                             >
                                 {{ errors.title }}
                             </p>
@@ -244,7 +221,7 @@ const handleClose = () => {
                         <!-- Description -->
                         <div>
                             <label
-                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                             >
                                 Description <span class="text-red-500">*</span>
                             </label>
@@ -252,14 +229,14 @@ const handleClose = () => {
                                 v-model="formData.description"
                                 placeholder="Describe the job role, responsibilities, and what you're looking for..."
                                 rows="5"
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"
                                 :class="{
                                     'border-red-500': errors.description,
                                 }"
                             />
                             <p
                                 v-if="errors.description"
-                                class="text-xs text-red-600 dark:text-red-400 mt-1"
+                                class="text-xs text-red-600 darksss:text-red-400 mt-1"
                             >
                                 {{ errors.description }}
                             </p>
@@ -270,13 +247,13 @@ const handleClose = () => {
                             <!-- Location -->
                             <div>
                                 <label
-                                    class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                    class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                                 >
                                     Location <span class="text-red-500">*</span>
                                 </label>
                                 <select
                                     v-model="formData.location"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                     :class="{
                                         'border-red-500': errors.location,
                                     }"
@@ -288,7 +265,7 @@ const handleClose = () => {
                                 </select>
                                 <p
                                     v-if="errors.location"
-                                    class="text-xs text-red-600 dark:text-red-400 mt-1"
+                                    class="text-xs text-red-600 darksss:text-red-400 mt-1"
                                 >
                                     {{ errors.location }}
                                 </p>
@@ -297,13 +274,13 @@ const handleClose = () => {
                             <!-- Job Type -->
                             <div>
                                 <label
-                                    class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                    class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                                 >
                                     Job Type
                                 </label>
                                 <select
                                     v-model="formData.jobType"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                 >
                                     <option value="full-time">Full-time</option>
                                     <option value="part-time">Part-time</option>
@@ -320,7 +297,7 @@ const handleClose = () => {
                             <!-- Min Salary -->
                             <div>
                                 <label
-                                    class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                    class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                                 >
                                     Minimum Salary
                                     <span class="text-red-500">*</span>
@@ -329,14 +306,14 @@ const handleClose = () => {
                                     v-model.number="formData.salaryMin"
                                     type="number"
                                     placeholder="e.g., 50000000"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                     :class="{
                                         'border-red-500': errors.salaryMin,
                                     }"
                                 />
                                 <p
                                     v-if="errors.salaryMin"
-                                    class="text-xs text-red-600 dark:text-red-400 mt-1"
+                                    class="text-xs text-red-600 darksss:text-red-400 mt-1"
                                 >
                                     {{ errors.salaryMin }}
                                 </p>
@@ -345,7 +322,7 @@ const handleClose = () => {
                             <!-- Max Salary -->
                             <div>
                                 <label
-                                    class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                    class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                                 >
                                     Maximum Salary
                                     <span class="text-red-500">*</span>
@@ -354,14 +331,14 @@ const handleClose = () => {
                                     v-model.number="formData.salaryMax"
                                     type="number"
                                     placeholder="e.g., 75000000"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                     :class="{
                                         'border-red-500': errors.salaryMax,
                                     }"
                                 />
                                 <p
                                     v-if="errors.salaryMax"
-                                    class="text-xs text-red-600 dark:text-red-400 mt-1"
+                                    class="text-xs text-red-600 darksss:text-red-400 mt-1"
                                 >
                                     {{ errors.salaryMax }}
                                 </p>
@@ -371,9 +348,11 @@ const handleClose = () => {
                         <!-- Salary Range Error -->
                         <div
                             v-if="errors.salaryRange"
-                            class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+                            class="p-3 rounded-lg bg-red-50 darksss:bg-red-900/20 border border-red-200 darksss:border-red-800"
                         >
-                            <p class="text-xs text-red-600 dark:text-red-400">
+                            <p
+                                class="text-xs text-red-600 darksss:text-red-400"
+                            >
                                 {{ errors.salaryRange }}
                             </p>
                         </div>
@@ -381,7 +360,7 @@ const handleClose = () => {
                         <!-- Requirements -->
                         <div>
                             <label
-                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                             >
                                 Requirements <span class="text-red-500">*</span>
                             </label>
@@ -393,7 +372,7 @@ const handleClose = () => {
                                     type="text"
                                     placeholder="e.g., 5+ years of experience"
                                     @keyup.enter="addRequirement"
-                                    class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                    class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                 />
                                 <button
                                     @click="addRequirement"
@@ -409,31 +388,71 @@ const handleClose = () => {
                                 <div
                                     v-for="(
                                         req, index
-                                    ) in formData.requirements"
+                                    ) in formData.requirements || []"
                                     :key="index"
-                                    class="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700"
+                                    class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border"
                                 >
-                                    <span
-                                        class="text-sm text-slate-700 dark:text-slate-300"
-                                    >
-                                        {{ req }}
-                                    </span>
-                                    <button
-                                        @click="removeRequirement(index)"
-                                        type="button"
-                                        class="text-red-500 hover:text-red-700 transition-colors"
-                                    >
-                                        <span
-                                            class="material-symbols-outlined text-lg"
-                                            >close</span
-                                        >
-                                    </button>
+                                    <!-- Mode Edit -->
+                                    <template v-if="editingIndex === index">
+                                        <input
+                                            v-model="editingRequirement"
+                                            class="flex-1 px-3 py-1 text-slate-700 border rounded"
+                                        />
+                                        <div class="flex gap-2 ml-2">
+                                            <button
+                                                @click="saveRequirement"
+                                                class="text-green-600"
+                                            >
+                                                Save
+                                            </button>
+
+                                            <button
+                                                @click="cancelEdit"
+                                                class="text-gray-500"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </template>
+
+                                    <!-- Mode View -->
+                                    <template v-else>
+                                        <span class="text-sm text-slate-700">
+                                            {{ req }}
+                                        </span>
+
+                                        <div class="flex gap-3">
+                                            <button
+                                                @click="
+                                                    startEditRequirement(index)
+                                                "
+                                                class="text-blue-500"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-xl"
+                                                    >edit</span
+                                                >
+                                            </button>
+
+                                            <button
+                                                @click="
+                                                    removeRequirement(index)
+                                                "
+                                                class="text-red-500"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-xl"
+                                                    >close</span
+                                                >
+                                            </button>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
 
                             <p
                                 v-if="errors.requirements"
-                                class="text-xs text-red-600 dark:text-red-400 mt-1"
+                                class="text-xs text-red-600 darksss:text-red-400 mt-1"
                             >
                                 {{ errors.requirements }}
                             </p>
@@ -442,13 +461,13 @@ const handleClose = () => {
                         <!-- Status -->
                         <div>
                             <label
-                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                                class="block text-sm font-semibold text-slate-700 darksss:text-slate-300 mb-2"
                             >
                                 Status
                             </label>
                             <select
                                 v-model="formData.status"
-                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 bg-white darksss:bg-slate-800 text-slate-900 darksss:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                             >
                                 <option value="open">Open</option>
                                 <option value="closed">Closed</option>
@@ -459,11 +478,11 @@ const handleClose = () => {
 
                     <!-- Footer -->
                     <div
-                        class="sticky bottom-0 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-end gap-3"
+                        class="sticky bottom-0 bg-slate-50 darksss:bg-slate-800/50 border-t border-slate-200 darksss:border-slate-800 px-6 py-4 flex items-center justify-end gap-3"
                     >
                         <button
                             @click="handleClose"
-                            class="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            class="px-6 py-2.5 rounded-lg border border-slate-300 darksss:border-slate-700 text-slate-700 darksss:text-slate-300 font-semibold hover:bg-slate-100 darksss:hover:bg-slate-800 transition-colors"
                         >
                             Cancel
                         </button>

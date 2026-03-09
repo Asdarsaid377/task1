@@ -17,9 +17,7 @@ defineEmits<{
     >
         <!-- Title Section -->
         <div>
-            <h1
-                class="text-3xl font-black tracking-tight text-slate-900 dark:text-white"
-            >
+            <h1 class="text-3xl font-black tracking-tight text-slate-900">
                 {{ title }}
             </h1>
             <p v-if="subtitle" class="text-slate-500 text-base mt-1">

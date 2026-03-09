@@ -45,7 +45,7 @@ const benefits: Benefit[] = [
                 </h2>
                 <p class="text-slate-600 max-w-2xl mx-auto">
                     We believe that happy employees create the best products.
-                    Here's what you can expect when you join the JobSync family.
+                    Here's what you can expect when you join the CWF family.
                 </p>
             </div>
 

@@ -3,13 +3,15 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import { MdWork } from "vue-icons-plus/md";
 import { AiOutlineClose, AiOutlineMenu } from "vue-icons-plus/ai";
-import { BiBuildings, BiSolidDashboard } from "vue-icons-plus/bi";
+import { BiSolidDashboard } from "vue-icons-plus/bi";
 import { HiMiniUserGroup } from "vue-icons-plus/hi2";
+import { useAuth } from "@/lib/authfirebase";
 
 const route = useRoute();
 
 const isOpen = ref(false);
 const isDesktop = ref(false);
+const { user } = useAuth();
 
 const checkScreen = () => {
     isDesktop.value = window.innerWidth >= 1024;
@@ -87,7 +89,7 @@ const isActive = (path: string) => {
     <!-- Sidebar -->
     <aside
         :class="[
-            'fixed top-0 left-0 z-50 h-screen w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-transform duration-300',
+            'fixed top-0 left-0 z-50 h-screen w-64 bg-white  border-r border-slate-200 darksss:border-slate-800 transition-transform duration-300',
             isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         ]"
     >
@@ -131,7 +133,7 @@ const isActive = (path: string) => {
                             'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors',
                             isActive(menu.path)
                                 ? 'bg-primary text-white shadow-md'
-                                : 'text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary',
+                                : 'text-slate-600 darksss:text-slate-400 hover:bg-primary/10 hover:text-primary',
                         ]"
                     >
                         <component :is="menu.icon" class="text-xl" />
@@ -141,12 +143,22 @@ const isActive = (path: string) => {
             </div>
 
             <!-- FOOTER -->
-            <div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+            <div
+                class="pt-6 border-t border-slate-200 darksss:border-slate-800"
+            >
                 <div class="flex items-center gap-3">
-                    <div class="size-10 rounded-full bg-slate-300" />
-                    <div>
-                        <p class="text-sm font-bold">Alex Morgan</p>
-                        <p class="text-xs text-slate-500">Talent Manager</p>
+                    <img
+                        :src="user?.photoURL"
+                        class="size-10 rounded-full"
+                        alt="User Photo"
+                    />
+                    <div class="text-slate-500">
+                        <p class="text-sm font-bold">
+                            {{ user?.displayName }}
+                        </p>
+                        <p class="text-xs">
+                            {{ user?.email }}
+                        </p>
                     </div>
                 </div>
             </div>

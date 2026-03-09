@@ -15,7 +15,7 @@
 // });
 
 // const submit = async () => {
-// 	if (form.email == "admin@jobsync.com" && form.password == "admin123") {
+// 	if (form.email == "admin@CWF.com" && form.password == "admin123") {
 // 		router.push("/dashboard");
 // 	}
 // };

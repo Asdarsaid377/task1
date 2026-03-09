@@ -65,8 +65,8 @@ onUnmounted(() => {
                 class="max-w-2xl text-lg md:text-xl text-white/90 font-medium mb-8 opacity-0 animate-fade-up"
                 style="animation-delay: 0.4s"
             >
-                At JobSync, we're on a mission to bridge the gap between talent
-                and opportunity. Come build the future of work with us in a
+                At CWF, we're on a mission to bridge the gap between talent and
+                opportunity. Come build the future of work with us in a
                 collaborative environment designed for growth.
             </p>
             <button

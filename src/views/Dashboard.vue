@@ -3,6 +3,7 @@ import { alertService } from "@/components/alert/notif";
 import DashboardCard from "@/components/card/DashboardCard.vue";
 import HiringPipelineCard from "@/components/card/HiringPipelineCard.vue";
 import ListingCard from "@/components/card/ListingCard.vue";
+import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import { applicationService } from "@/services/applications.service";
 import type { GetApplication } from "@/types/ApplicationType";
 import { onMounted, onUnmounted, ref } from "vue";
@@ -45,15 +46,14 @@ onUnmounted(() => [(applications.value = [])]);
         <!-- Dashboard Content -->
         <div class="p-6 space-y-8">
             <!-- Welcome -->
-            <div>
-                <h1 class="text-3xl font-black tracking-tight">
-                    Dashboard Overview
-                </h1>
-                <p class="text-slate-500 mt-1">
-                    Welcome back, here is what's happening with your job
-                    listings today.
-                </p>
-            </div>
+
+            <TitleDashboard
+                title="  Dashboard Overview"
+                subtitle="Welcome back, here is what's happening with your job
+                    listings today."
+                class="text-zinc-900 darkssstext-zinc-100"
+            />
+
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <DashboardCard
@@ -69,7 +69,6 @@ onUnmounted(() => [(applications.value = [])]);
                     :icon="MdOutlineWork"
                     :trend="'0'"
                 />
-
                 <DashboardCard
                     :value="
                         applications.filter(
@@ -83,12 +82,14 @@ onUnmounted(() => [(applications.value = [])]);
             </div>
             <!-- Recent Applicants -->
             <div
-                class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+                class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
             >
                 <div
-                    class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center"
+                    class="p-6 border-b border-slate-200 flex justify-between items-center"
                 >
-                    <h2 class="text-xl font-bold">Recent Applicant Activity</h2>
+                    <h2 class="text-xl text-slate-500 font-bold">
+                        Recent Applicant Activity
+                    </h2>
                     <a
                         href="/dashboard/applicant"
                         class="text-primary text-sm font-bold hover:underline"
@@ -98,7 +99,7 @@ onUnmounted(() => [(applications.value = [])]);
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-background-light dark:bg-slate-800/50">
+                        <thead class="bg-background-light">
                             <tr>
                                 <th
                                     class="px-6 py-3 text-xs font-bold text-slate-500 uppercase"
@@ -122,18 +123,16 @@ onUnmounted(() => [(applications.value = [])]);
                                 </th>
                             </tr>
                         </thead>
-                        <tbody
-                            class="divide-y divide-slate-200 dark:divide-slate-800"
-                        >
+                        <tbody class="divide-y divide-slate-200">
                             <tr
                                 v-for="applicant in applications"
                                 :key="applicant.id"
-                                class="hover:bg-background-light dark:hover:bg-slate-800/30 transition-colors"
+                                class="hover:bg-background-light transition-colors"
                             >
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div
-                                            class="size-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-primary"
+                                            class="size-9 rounded-full bg-slate-100 flex items-center justify-center font-bold text-primary"
                                         >
                                             <img
                                                 class="rounded-full"
@@ -142,7 +141,9 @@ onUnmounted(() => [(applications.value = [])]);
                                             />
                                         </div>
                                         <div>
-                                            <p class="text-sm font-bold">
+                                            <p
+                                                class="text-sm text-slate-500 font-bold"
+                                            >
                                                 {{ applicant.candidateName }}
                                             </p>
                                             <p class="text-xs text-slate-500">
@@ -152,7 +153,9 @@ onUnmounted(() => [(applications.value = [])]);
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <p class="text-sm font-medium">
+                                    <p
+                                        class="text-sm font-medium text-slate-500"
+                                    >
                                         {{ applicant.job.title }}
                                     </p>
                                 </td>
@@ -167,7 +170,7 @@ onUnmounted(() => [(applications.value = [])]);
                                 </td>
                                 <td class="px-6 py-4">
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800"
                                         >{{ applicant.status }}</span
                                     >
                                 </td>

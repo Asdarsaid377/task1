@@ -14,29 +14,33 @@ export function setupAuthGuards(router: Router) {
 
     router.beforeEach(async (to) => {
         await initialize();
-        const isAuthRoute = to.path.startsWith("/auth");
-        const requiresAuth = to.meta.requiresAuth;
-        const requiredRole = to.meta.requiredRole;
 
+        const requiresAuth = to.matched.some(
+            (record) => record.meta.requiresAuth,
+        );
+
+        const requiredRole = to.matched
+            .map((record) => record.meta.requiredRole)
+            .find((role) => role);
+
+        const isAuthRoute = ["/register"].includes(to.path);
+
+        // user belum login
         if (requiresAuth && !isAuthenticated.value) {
             return {
-                path: "/auth",
-                query: { redirect: to.fullPath }, // optional nice UX
+                path: "/login",
+                query: { redirect: to.fullPath },
             };
         }
 
-        if (requiresAuth && !isAuthenticated.value) {
-            return "/register";
-        }
-
+        // role tidak sesuai
         if (requiredRole && user.value?.role !== requiredRole) {
             return "/unauthorized";
         }
 
+        // user sudah login tapi buka login page
         if (isAuthRoute && isAuthenticated.value) {
-            return user.value?.role === "admin"
-                ? "/admin/dashboard"
-                : "/candidate/dashboard";
+            return user.value?.role === "admin" ? "/dashboard" : "/";
         }
 
         return true;

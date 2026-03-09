@@ -51,7 +51,7 @@ const form = ref({
 });
 
 const submitJob = () => {
-    console.log("Data dihantar:", form.value);
+    // console.log("Data dihantar:", form.value);
     alert("Lowongan berjaya diterbitkan!");
 };
 </script>

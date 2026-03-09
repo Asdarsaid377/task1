@@ -27,7 +27,7 @@ import { Fa6LocationDot } from "vue-icons-plus/fa6";
             </p>
             <!-- Search Container -->
             <div
-                class="bg-white dark:bg-slate-900 p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-4xl mx-auto"
+                class="bg-white p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-4xl mx-auto"
             >
                 <div
                     class="flex-1 flex items-center px-4 gap-3 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800 py-3 md:py-0"

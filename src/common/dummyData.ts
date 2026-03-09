@@ -36,7 +36,7 @@ export const currentUser: IUser = {
     name: "HR Manager TechCorp",
     email: "hr.manager@techcorp.com",
     role: "candidate",
-    createdAt: new Date("2024-01-01T00:00:00Z"),
+    createdAt: new Date("2026-01-01T00:00:00Z"),
     displayName: "HR Manager TechCorp",
     photoURL: "https://api.dicebear.com/7.x/initials/svg?seed=HRM",
     uid: "user-001",

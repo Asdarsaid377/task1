@@ -4,11 +4,9 @@ import { dummyJobs } from "@/common/dummyData";
 import JobCard from "@/components/shared/JobCard.vue";
 import type { IJob } from "@/types/JobType";
 const handleApply = (job: IJob) => {
-    console.log("Melamar pada pekerjaan:", job);
 };
 
 const handleViewDetails = (job: IJob) => {
-    console.log("Melihat detail pekerjaan:", job);
 };
 </script>
 
@@ -129,7 +127,7 @@ const handleViewDetails = (job: IJob) => {
                         Experience Level
                     </h3>
                     <select
-                        class="w-full rounded-lg border-slate-200 dark:border-slate-800 dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary"
+                        class="w-full rounded-lg border-slate-200 dark:border-slate-800 text-sm focus:ring-primary focus:border-primary"
                     >
                         <option>Any Experience</option>
                         <option>Entry Level</option>

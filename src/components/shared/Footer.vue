@@ -10,7 +10,7 @@ import { BsTelephone } from "vue-icons-plus/bs";
         <div
             class="max-w-7xl mx-auto border-t border-slate-800 text-sm flex flex-col md:flex-row justify-between items-center gap-4"
         >
-            <p>© 2024 CWF Inc. All rights reserved.</p>
+            <p>© 2026 CWF Inc. All rights reserved.</p>
             <div class="flex items-center gap-6">
                 <a class="hover:text-white" href="#"
                     ><span class="material-symbols-outlined"

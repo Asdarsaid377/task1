@@ -67,7 +67,7 @@ const getStatusColor = (status: string) => {
         case "rejected":
             return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
         default:
-            return "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400";
+            return "bg-slate-100 text-slate-700 /30 dark:text-slate-400";
     }
 };
 
@@ -90,10 +90,10 @@ const getData = async () => {
             user.value.uid,
         );
         applications.value = data;
-        console.log("Applications loaded:", data);
+        // console.log("Applications loaded:", data);
         return data;
     } catch (error) {
-        console.log("Error fetching applications:", error);
+        // console.log("Error fetching applications:", error);
     } finally {
         loading.value = false;
     }
@@ -114,7 +114,7 @@ onMounted(() => {
     <main class="max-w-7xl mx-auto px-4 py-12">
         <!-- Profile Section -->
         <section
-            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-primary/5 p-8 mb-8"
+            class="bg-white rounded-xl shadow-sm border border-primary/5 p-8 mb-8"
         >
             <div
                 class="flex flex-col md:flex-row items-center md:items-center gap-8"
@@ -167,7 +167,7 @@ onMounted(() => {
 
         <!-- Applications Section -->
         <div
-            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
         >
             <!-- Status Tabs -->
             <div

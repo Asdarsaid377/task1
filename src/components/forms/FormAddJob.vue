@@ -32,7 +32,7 @@ const editingIndex = ref<number | null>(null);
 const editingRequirement = ref<string>("");
 
 const removeRequirement = (index: number) => {
-    const removed = formJob.requirements.splice(index, 1);
+    formJob.requirements.splice(index, 1);
 };
 
 const addRequirement = () => {

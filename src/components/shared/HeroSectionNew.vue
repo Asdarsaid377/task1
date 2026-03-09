@@ -9,8 +9,8 @@ const onScroll = () => {
 
 const onMouseMove = (e: MouseEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
+    (e.clientX - rect.left) / rect.width;
+    (e.clientY - rect.top) / rect.height;
     // Bisa digunakan untuk advanced effects di masa depan
 };
 

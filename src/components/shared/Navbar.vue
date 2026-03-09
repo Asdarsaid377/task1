@@ -39,12 +39,6 @@ const toggleProfileMenu = () => {
     isProfileMenuOpen.value = !isProfileMenuOpen.value;
 };
 
-const scrollToSection = (sectionId: string) => {
-    closeMenu();
-    const element = document.querySelector(sectionId);
-    element?.scrollIntoView({ behavior: "smooth" });
-};
-
 const handleLogout = async () => {
     try {
         await signOut(auth);

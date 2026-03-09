@@ -7,12 +7,10 @@ import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import { applicationService } from "@/services/applications.service";
 import type { GetApplication } from "@/types/ApplicationType";
 import { onMounted, onUnmounted, ref } from "vue";
-import { AiFillCalendar, AiOutlineMore } from "vue-icons-plus/ai";
+import { AiFillCalendar } from "vue-icons-plus/ai";
 import { BiTrendingUp } from "vue-icons-plus/bi";
-import { BsPalette, BsTerminal } from "vue-icons-plus/bs";
-import { CgMoreAlt } from "vue-icons-plus/cg";
 import { MdOutlineWork } from "vue-icons-plus/md";
-import { TbBrandGoogleAnalytics } from "vue-icons-plus/tb";
+
 
 const applications = ref<GetApplication[]>([]);
 const loading = ref(false);

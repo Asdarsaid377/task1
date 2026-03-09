@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { applicationService } from "@/services/applications.service";
 import type {
     IApplication,
@@ -151,7 +151,6 @@ const handleDelete = async (application: IApplication) => {
     try {
         loading.value = true;
         error.value = null;
-
 
         await applicationService.deleteApplication(application.id);
 

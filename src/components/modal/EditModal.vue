@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect } from "vue";
+import { ref, computed, watch } from "vue";
 import type { IJob } from "@/types/JobType";
 
 interface Props {

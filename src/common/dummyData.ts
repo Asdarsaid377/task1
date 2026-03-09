@@ -1,4 +1,3 @@
-import type { IApplication } from "@/types/ApplicationType";
 import type { IJob } from "@/types/JobType";
 import type { Company, IUser } from "@/types/UserType";
 
@@ -151,43 +150,5 @@ export const dummyJobs: IJob[] = [
         createdAt: new Date("2026-02-05"),
         companyLogo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
         companyName: "TechCorp Solutions",
-    },
-];
-
-export const dummyApplications: IApplication[] = [
-    {
-        id: "a1",
-        jobId: "j1",
-        applicantId: "u3",
-        status: "pending",
-        appliedAt: new Date("2026-02-10"),
-    },
-    {
-        id: "a2",
-        jobId: "j1",
-        applicantId: "u4",
-        status: "accepted",
-        appliedAt: new Date("2026-02-11"),
-    },
-    {
-        id: "a3",
-        jobId: "j2",
-        applicantId: "u5",
-        status: "rejected",
-        appliedAt: new Date("2026-02-12"),
-    },
-    {
-        id: "a4",
-        jobId: "j3",
-        applicantId: "u3",
-        status: "pending",
-        appliedAt: new Date("2026-02-13"),
-    },
-    {
-        id: "a5",
-        jobId: "j4",
-        applicantId: "u4",
-        status: "pending",
-        appliedAt: new Date("2026-02-14"),
     },
 ];

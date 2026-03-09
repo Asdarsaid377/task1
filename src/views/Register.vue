@@ -4,8 +4,6 @@ import { useRouter } from "vue-router";
 import {
     GoogleAuthProvider,
     signInWithPopup,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
@@ -27,10 +25,6 @@ export type UserProfile = {
 const router = useRouter();
 const loading = ref(false);
 const error = ref<string | null>(null);
-const isLoginMode = ref(true);
-const email = ref("");
-const password = ref("");
-const displayName = ref("");
 
 // Methods
 const signInWithGoogle = async () => {
@@ -74,102 +68,7 @@ const signInWithGoogle = async () => {
     }
 };
 
-const handleEmailSignUp = async () => {
-    if (!email.value || !password.value || !displayName.value) {
-        error.value = "Mohon isi semua field";
-        return;
-    }
 
-    loading.value = true;
-    error.value = null;
-
-    try {
-        // Create user with email and password
-        const result = await createUserWithEmailAndPassword(
-            auth,
-            email.value,
-            password.value,
-        );
-
-        // Create user profile in Firestore as CANDIDATE (default)
-        const userProfile: UserProfile = {
-            uid: result.user.uid,
-            email: result.user.email || "",
-            displayName: displayName.value,
-            photoURL: "",
-            role: "candidate",
-            createdAt: new Date(),
-        };
-
-        await setDoc(doc(db, "users", result.user.uid), userProfile);
-        router.push("/candidate/dashboard");
-    } catch (err: any) {
-        console.error("Sign Up Error:", err);
-        if (err.code === "auth/email-already-in-use") {
-            error.value = "Email sudah terdaftar";
-        } else if (err.code === "auth/weak-password") {
-            error.value = "Password terlalu lemah (minimal 6 karakter)";
-        } else {
-            error.value = err.message || "Terjadi kesalahan";
-        }
-    } finally {
-        loading.value = false;
-    }
-};
-
-const handleEmailSignIn = async () => {
-    if (!email.value || !password.value) {
-        error.value = "Mohon isi email dan password";
-        return;
-    }
-
-    loading.value = true;
-    error.value = null;
-
-    try {
-        const result = await signInWithEmailAndPassword(
-            auth,
-            email.value,
-            password.value,
-        );
-
-        // Get user profile
-        const userDocRef = doc(db, "users", result.user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-            const userProfile = userDocSnap.data() as UserProfile;
-            if (userProfile.role === "admin") {
-                router.push("/admin/dashboard");
-            } else {
-                router.push("/candidate/dashboard");
-            }
-        }
-    } catch (err: any) {
-        console.error("Sign In Error:", err);
-        if (err.code === "auth/user-not-found") {
-            error.value = "Email tidak terdaftar";
-        } else if (err.code === "auth/wrong-password") {
-            error.value = "Password salah";
-        } else {
-            error.value = err.message || "Terjadi kesalahan";
-        }
-    } finally {
-        loading.value = false;
-    }
-};
-
-const toggleMode = () => {
-    isLoginMode.value = !isLoginMode.value;
-    error.value = null;
-    email.value = "";
-    password.value = "";
-    displayName.value = "";
-};
-
-const dismissError = () => {
-    error.value = null;
-};
 </script>
 
 <template>

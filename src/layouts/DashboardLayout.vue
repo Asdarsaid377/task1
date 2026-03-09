@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import HeaderDashboard from "@/components/shared/HeaderDashboard.vue";
 import Sidebar from "@/components/shared/Sidebar.vue";
 </script>
 

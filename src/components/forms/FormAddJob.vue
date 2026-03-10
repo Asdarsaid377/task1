@@ -6,9 +6,10 @@ import type { IJob } from "@/types/JobType";
 import { useRouter } from "vue-router";
 import { jobService } from "@/services/job.service";
 import { AiFillSchedule } from "vue-icons-plus/ai";
-import { BiMoneyWithdraw } from "vue-icons-plus/bi";
+import { BiHome, BiMoneyWithdraw } from "vue-icons-plus/bi";
 import { EpLocation } from "vue-icons-plus/ep";
 import TitleDashboard from "../shared/TitleDashboard.vue";
+import BreadCrumbs from "../shared/BreadCrumbs.vue";
 
 const formJob = reactive<
     Omit<IJob, "id" | "createdBy"> & { requirements: string[] }
@@ -77,7 +78,9 @@ const seePreview = () => {
 </script>
 
 <template>
-    <main class="flex-1 overflow-y-auto bg-background-light">
+    <main
+        class="flex-1 p-6 bg-white darksssbg-zinc-950 transition-colors duration-300"
+    >
         <div class="max-w-7xl mx-auto">
             <TitleDashboard
                 title="Post New Job"

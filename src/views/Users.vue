@@ -6,38 +6,36 @@ import FilterandSearch from "@/components/shared/FilterandSearch.vue";
 import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import { useDebounce } from "@/composable/useDebounce";
 import BaseTable, { type TableColumn } from "@/components/table/BaseTable.vue";
+import { useFetch } from "@/composable/useFetch";
+import { useTableFilter } from "@/composable/useFilterTable";
+import { formatDate } from "@/utils/formatDate";
 
 // State
-const loading = ref(true);
 const deleting = ref(false);
-const users = ref<IUser[]>([]);
-
 const selectedUser = ref<IUser | null>(null);
 const showDeleteModal = ref(false);
 const showEditRoleModal = ref(false);
 const newRole = ref<"admin" | "candidate">("candidate");
 const deleteConfirmEmail = ref("");
-const error = ref<string | null>(null);
 const searchQuery = ref("");
 const filters = ref({
     role: "all",
 });
 const debouncedSearch = useDebounce<string>(searchQuery, 1000);
+const {
+    data: users,
+    error,
+    loading,
+    execute: fetchUsers,
+} = useFetch<IUser[]>(() => userService.fetchUsers(), []);
 
+const { filteredData: filteredUsers } = useTableFilter(
+    users,
+    debouncedSearch,
+    filters,
+    ["displayName", "email"],
+);
 // Computed
-const filteredUsers = computed(() => {
-    const query = debouncedSearch.value.toLowerCase();
-    return users.value.filter((user) => {
-        const matchesSearch =
-            !query ||
-            user.displayName?.toLowerCase().includes(query) ||
-            user.email?.toLowerCase().includes(query);
-        const matchesRole =
-            filters.value.role === "all" || user.role === filters.value.role;
-
-        return matchesSearch && matchesRole;
-    });
-});
 
 const canDeleteUser = computed(() => {
     return deleteConfirmEmail.value === selectedUser.value?.email;
@@ -68,32 +66,16 @@ const closeEditRoleModal = () => {
     selectedUser.value = null;
 };
 
-const fetchUsers = async () => {
-    try {
-        loading.value = true;
-        error.value = null;
-        const data = await userService.fetchUsers();
-        users.value = data;
-        // console.log(users);
-    } catch (err: any) {
-        console.error("Error fetching users:", err);
-        error.value = "Failed to fetch users";
-    } finally {
-        loading.value = false;
-    }
-};
-
 const handleDeleteUser = async () => {
     if (!selectedUser.value || !canDeleteUser.value) return;
 
     deleting.value = true;
-    error.value = null;
 
     try {
         // Delete user from Firestore
         await userService.deleteUser(selectedUser.value.uid);
         // Remove from local list
-        users.value = users.value.filter(
+        users.value = users.value!.filter(
             (u) => u.uid !== selectedUser.value?.uid,
         );
         closeDeleteModal();
@@ -115,11 +97,11 @@ const handleEditRole = async () => {
         // Update role in Firestore
         await userService.changeUserRole(selectedUser.value.uid, newRole.value);
         // Update local state
-        const userIndex = users.value.findIndex(
+        const userIndex = users.value!.findIndex(
             (u) => u.uid === selectedUser.value?.uid,
         );
-        if (userIndex !== -1 && users.value[userIndex]) {
-            users.value[userIndex].role = newRole.value;
+        if (userIndex !== -1 && users.value![userIndex]) {
+            users.value![userIndex].role = newRole.value;
         }
         closeEditRoleModal();
     } catch (err: any) {
@@ -128,16 +110,6 @@ const handleEditRole = async () => {
     } finally {
         deleting.value = false;
     }
-};
-
-const formatDate = (date: any) => {
-    if (!date) return "N/A";
-    const d = date.toDate?.() || new Date(date);
-    return new Intl.DateTimeFormat("id-ID", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-    }).format(d);
 };
 
 const dismissError = () => {

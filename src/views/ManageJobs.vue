@@ -8,10 +8,13 @@ import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import FilterandSearch from "@/components/shared/FilterandSearch.vue";
 import EditModal from "@/components/modal/EditModal.vue";
 import { useDebounce } from "@/composable/useDebounce";
+import { useFetch } from "@/composable/useFetch";
+import { useTableFilter } from "@/composable/useFilterTable";
+import { formatCurrency } from "@/utils/formatCurrency";
 
-const loading = ref(true);
-const jobs = ref<IJob[]>([]);
-const error = ref<string | null>(null);
+// const loading = ref(true);
+// const jobs = ref<IJob[]>([]);
+// const error = ref<string | null>(null);
 const searchQuery = ref("");
 const debouncedSearch = useDebounce<string>(searchQuery, 1000);
 const filters = ref({
@@ -30,53 +33,30 @@ const columns: TableColumn[] = [
     { key: "location", label: "Location" },
 ];
 
-const filteredJob = computed(() => {
-    const query = debouncedSearch.value.toLowerCase();
-    return jobs.value.filter((user) => {
-        const matchesSearch =
-            !query ||
-            user.title?.toLowerCase().includes(query) ||
-            user.jobType?.toLowerCase().includes(query) ||
-            user.location?.toLowerCase().includes(query);
-        const matchesRole =
-            filters.value.status === "all" ||
-            user.status === filters.value.status;
+const {
+    data,
+    error,
+    loading,
+    execute: fetchJobs,
+} = useFetch<IJob[]>(() => jobService.fetchJobs(), []);
 
-        return matchesSearch && matchesRole;
-    });
-});
+const { filteredData: filteredJob } = useTableFilter(
+    data,
+    debouncedSearch,
+    filters,
+    ["title", "jobType", "location"],
+);
 
-const fetchJobs = async () => {
-    try {
-        loading.value = true;
-        jobs.value = await jobService.fetchJobs();
-    } catch (err) {
-        error.value = "Failed to load jobs.";
-    } finally {
-        loading.value = false;
-    }
-};
-
-/**
- * Open edit modal dengan selected job
- */
 const handleEditClick = (job: IJob) => {
     selectedJob.value = job;
     isEditModalOpen.value = true;
 };
 
-/**
- * Handle edit modal close
- */
 const handleEditModalClose = () => {
     isEditModalOpen.value = false;
     selectedJob.value = undefined;
 };
 
-/**
- * Handle edit form submit
- * @param updatedData - Data yang sudah diedit dari form
- */
 const handleSubmitEdit = async (updatedData: Partial<IJob>) => {
     if (!selectedJob.value?.id) {
         error.value = "Job ID is missing";
@@ -121,9 +101,6 @@ const dismissError = () => {
     error.value = null;
 };
 
-/**
- * Dismiss success message
- */
 const dismissSuccess = () => {
     successMessage.value = null;
 };
@@ -133,7 +110,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    jobs.value = [];
+    data.value = [];
 });
 </script>
 <template>
@@ -265,8 +242,8 @@ onUnmounted(() => {
                     <span
                         class="text-zinc-700 darkssstext-zinc-300 font-medium"
                     >
-                        IDR {{ item.salaryMin?.toLocaleString() }} -
-                        {{ item.salaryMax?.toLocaleString() }}
+                        {{ formatCurrency(item.salaryMin) }} -
+                        {{ formatCurrency(item.salaryMax) }}
                     </span>
                 </template>
 

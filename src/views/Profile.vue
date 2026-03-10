@@ -57,17 +57,17 @@ const statusCounts = computed(() => {
 const getStatusColor = (status: string) => {
     switch (status) {
         case "pending":
-            return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+            return "bg-yellow-100 text-yellow-700 darksss:bg-yellow-900/30 darksss:text-yellow-400";
         case "reviewed":
-            return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+            return "bg-blue-100 text-blue-700 darksss:bg-blue-900/30 darksss:text-blue-400";
         case "interviewed":
-            return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400";
+            return "bg-purple-100 text-purple-700 darksss:bg-purple-900/30 darksss:text-purple-400";
         case "accepted":
-            return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+            return "bg-green-100 text-green-700 darksss:bg-green-900/30 darksss:text-green-400";
         case "rejected":
-            return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+            return "bg-red-100 text-red-700 darksss:bg-red-900/30 darksss:text-red-400";
         default:
-            return "bg-slate-100 text-slate-700 /30 dark:text-slate-400";
+            return "bg-slate-100 text-slate-700 /30 darksss:text-slate-400";
     }
 };
 
@@ -111,7 +111,7 @@ onMounted(() => {
 
 <template>
     <Navbar />
-    <main class="max-w-7xl mx-auto px-4 py-12">
+    <main class="max-w-7xl mx-auto px-4 py-12 h-screen">
         <!-- Profile Section -->
         <section
             class="bg-white rounded-xl shadow-sm border border-primary/5 p-8 mb-8"
@@ -145,7 +145,7 @@ onMounted(() => {
                     >
                         <div>
                             <h1
-                                class="text-3xl uppercase font-bold text-slate-900 dark:text-white mb-1"
+                                class="text-3xl uppercase font-bold text-slate-900 darksss:text-white mb-1"
                             >
                                 {{ profile?.displayName }}
                             </h1>
@@ -154,7 +154,7 @@ onMounted(() => {
                             </p>
                         </div>
                     </div>
-                    <p class="text-slate-600 dark:text-slate-400">
+                    <p class="text-slate-600 darksss:text-slate-400">
                         You have applied to
                         <span class="font-bold text-primary">
                             {{ applications.length }}
@@ -167,11 +167,11 @@ onMounted(() => {
 
         <!-- Applications Section -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 darksss:border-slate-800 overflow-hidden"
         >
             <!-- Status Tabs -->
             <div
-                class="flex border-b border-slate-200 dark:border-slate-800 px-6 gap-2 overflow-x-auto scrollbar-hide bg-slate-50 dark:bg-slate-800/30"
+                class="flex border-b border-slate-200 darksss:border-slate-800 px-6 gap-2 overflow-x-auto scrollbar-hide bg-slate-50 darksss:bg-slate-800/30"
             >
                 <button
                     v-for="tab in statusTabs"
@@ -184,8 +184,8 @@ onMounted(() => {
                         class="text-sm font-bold tracking-wide"
                         :class="
                             activeStatus === tab.value
-                                ? 'text-primary dark:text-white'
-                                : 'text-slate-500 dark:text-slate-400 hover:text-primary'
+                                ? 'text-primary darksss:text-white'
+                                : 'text-slate-500 darksss:text-slate-400 hover:text-primary'
                         "
                     >
                         {{ tab.label }}
@@ -194,7 +194,7 @@ onMounted(() => {
                             :class="
                                 activeStatus === tab.value
                                     ? 'bg-primary/20 text-primary'
-                                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                                    : 'bg-slate-100 darksss:bg-slate-700 text-slate-600 darksss:text-slate-300'
                             "
                         >
                             {{
@@ -245,7 +245,7 @@ onMounted(() => {
                         ></path>
                     </svg>
                 </div>
-                <p class="text-slate-500 dark:text-slate-400 mt-4">
+                <p class="text-slate-500 darksss:text-slate-400 mt-4">
                     Loading your applications...
                 </p>
             </div>
@@ -255,14 +255,14 @@ onMounted(() => {
                 v-else-if="filteredApplications.length === 0"
                 class="p-12 text-center"
             >
-                <p class="text-slate-500 dark:text-slate-400 text-lg">
+                <p class="text-slate-500 darksss:text-slate-400 text-lg">
                     {{
                         activeStatus
                             ? "No applications found in this status"
                             : "You haven't applied to any jobs yet"
                     }}
                 </p>
-                <p class="text-sm text-slate-400 dark:text-slate-500 mt-2">
+                <p class="text-sm text-slate-400 darksss:text-slate-500 mt-2">
                     Start exploring and apply for your dream job!
                 </p>
             </div>
@@ -271,36 +271,36 @@ onMounted(() => {
             <div v-else class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-800/50">
+                        <tr class="bg-slate-50 darksss:bg-slate-800/50">
                             <th
-                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 darksss:text-slate-400"
                             >
                                 Company
                             </th>
                             <th
-                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 darksss:text-slate-400"
                             >
                                 Job Title
                             </th>
                             <th
-                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 darksss:text-slate-400"
                             >
                                 Date Applied
                             </th>
                             <th
-                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center"
+                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 darksss:text-slate-400 text-center"
                             >
                                 Status
                             </th>
                         </tr>
                     </thead>
                     <tbody
-                        class="divide-y divide-slate-100 dark:divide-slate-800"
+                        class="divide-y divide-slate-100 darksss:divide-slate-800"
                     >
                         <tr
                             v-for="item in filteredApplications"
                             :key="item.id"
-                            class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
+                            class="hover:bg-slate-50 darksss:hover:bg-slate-800/30 transition-colors"
                         >
                             <!-- Company -->
                             <td class="px-6 py-5">
@@ -314,7 +314,7 @@ onMounted(() => {
                                         }}
                                     </div>
                                     <span
-                                        class="font-semibold text-slate-900 dark:text-slate-100"
+                                        class="font-semibold text-slate-900 darksss:text-slate-100"
                                     >
                                         {{ item.job.companyName || "Company" }}
                                     </span>
@@ -323,14 +323,14 @@ onMounted(() => {
 
                             <!-- Job Title -->
                             <td
-                                class="px-6 py-5 text-slate-600 dark:text-slate-300 font-medium"
+                                class="px-6 py-5 text-slate-600 darksss:text-slate-300 font-medium"
                             >
                                 {{ item.job.title }}
                             </td>
 
                             <!-- Date Applied -->
                             <td
-                                class="px-6 py-5 text-slate-500 dark:text-slate-400 text-sm"
+                                class="px-6 py-5 text-slate-500 darksss:text-slate-400 text-sm"
                             >
                                 {{ formatDate(item.appliedAt) }}
                             </td>
@@ -354,15 +354,19 @@ onMounted(() => {
             <!-- Table Footer - Summary -->
             <div
                 v-if="!loading && filteredApplications.length > 0"
-                class="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800"
+                class="px-6 py-4 bg-slate-50 darksss:bg-slate-800/30 border-t border-slate-100 darksss:border-slate-800"
             >
-                <p class="text-sm text-slate-600 dark:text-slate-400">
+                <p class="text-sm text-slate-600 darksss:text-slate-400">
                     Showing
-                    <span class="font-semibold text-slate-900 dark:text-white">
+                    <span
+                        class="font-semibold text-slate-900 darksss:text-white"
+                    >
                         {{ filteredApplications.length }}
                     </span>
                     of
-                    <span class="font-semibold text-slate-900 dark:text-white">
+                    <span
+                        class="font-semibold text-slate-900 darksss:text-white"
+                    >
                         {{ applications.length }}
                     </span>
                     application{{

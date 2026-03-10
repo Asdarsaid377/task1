@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import { useDebounce } from "@/composable/useDebounce";
+import { useFetch } from "@/composable/useFetch";
+import { useTableFilter } from "@/composable/useFilterTable";
 import { jobService } from "@/services/job.service";
 import type { IJob } from "@/types/JobType";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { Fa6LocationDot } from "vue-icons-plus/fa6";
 import { PiBriefcaseBold } from "vue-icons-plus/pi";
+import Loading from "./Loading.vue";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const searchQuery = ref("");
 const debouncedSearch = useDebounce<string>(searchQuery, 1000);
 const selectedDept = ref("");
-const loading = ref(true);
-const jobs = ref<IJob[]>([]);
-const error = ref<string | null>(null);
 const isMounted = ref(false);
 
-const uniqueJobTypes = computed(() => {
-    return [...new Set(jobs.value.map((job) => job.jobType))];
-});
+const {
+    data: jobs,
+    error,
+    loading,
+    execute: getJob,
+} = useFetch<IJob[]>(() => jobService.fetchJobs(), []);
 
 const filteredJobs = computed(() => {
     const query = debouncedSearch.value.toLowerCase().trim();
-    return jobs.value.filter((job) => {
+    return jobs.value!.filter((job) => {
         const matchesSearch =
             job.title.toLowerCase().includes(query) ||
             job.location.toLowerCase().includes(query);
@@ -32,20 +36,9 @@ const filteredJobs = computed(() => {
     });
 });
 
-const getJob = async () => {
-    try {
-        loading.value = true;
-        error.value = null;
-        const data = await jobService.fetchJobs();
-        if (isMounted.value) {
-            jobs.value = data;
-        }
-    } catch (err) {
-        if (isMounted.value) {
-            error.value = "Failed to fetch users";
-        }
-    }
-};
+const uniqueJobTypes = computed(() => {
+    return [...new Set(jobs.value!.map((job) => job.jobType))];
+});
 
 onMounted(() => {
     isMounted.value = true;
@@ -61,6 +54,7 @@ onUnmounted(() => {
     <section id="jobs" class="bg-white py-20 px-6 lg:px-20">
         <div class="max-w-7xl mx-auto">
             <!-- Section Header -->
+
             <div
                 class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-slide-up"
             >
@@ -110,8 +104,9 @@ onUnmounted(() => {
                 </div>
             </div>
 
+            <Loading v-if="loading" />
             <!-- Job Listings -->
-            <div class="space-y-4">
+            <div v-else class="space-y-4">
                 <div
                     v-for="(job, index) in filteredJobs"
                     :key="job.id"
@@ -147,8 +142,8 @@ onUnmounted(() => {
                             <span
                                 class="px-2 py-0.5 rounded-full bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider"
                             >
-                                Rp. {{ job.salaryMin.toLocaleString() }} -
-                                {{ job.salaryMax.toLocaleString() }}
+                                {{ formatCurrency(job.salaryMin) }} -
+                                {{ formatCurrency(job.salaryMax) }}
                             </span>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HeaderDashboard from "@/components/shared/HeaderDashboard.vue";
 import Sidebar from "@/components/shared/Sidebar.vue";
 </script>
 
@@ -6,7 +7,7 @@ import Sidebar from "@/components/shared/Sidebar.vue";
     <div class="h-screen overflow-hidden bg-background-light">
         <Sidebar />
         <main class="lg:ml-64 h-full flex flex-col overflow-hidden">
-            <!-- <HeaderDashboard /> -->
+            <HeaderDashboard />
             <div class="flex-1 bg-white overflow-y-auto p-6">
                 <router-view />
             </div>

@@ -6,11 +6,11 @@ import ListingCard from "@/components/card/ListingCard.vue";
 import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import { applicationService } from "@/services/applications.service";
 import type { GetApplication } from "@/types/ApplicationType";
+import { formatDate } from "@/utils/formatDate";
 import { onMounted, onUnmounted, ref } from "vue";
 import { AiFillCalendar } from "vue-icons-plus/ai";
 import { BiTrendingUp } from "vue-icons-plus/bi";
 import { MdOutlineWork } from "vue-icons-plus/md";
-
 
 const applications = ref<GetApplication[]>([]);
 const loading = ref(false);
@@ -88,12 +88,12 @@ onUnmounted(() => [(applications.value = [])]);
                     <h2 class="text-xl text-slate-500 font-bold">
                         Recent Applicant Activity
                     </h2>
-                    <a
-                        href="/dashboard/applicant"
+                    <router-link
+                        to="/dashboard/candidates"
                         class="text-primary text-sm font-bold hover:underline"
                     >
                         View All
-                    </a>
+                    </router-link>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
@@ -159,11 +159,7 @@ onUnmounted(() => [(applications.value = [])]);
                                 </td>
                                 <td class="px-6 py-4">
                                     <p class="text-sm text-slate-500">
-                                        {{
-                                            new Date(
-                                                applicant.appliedAt,
-                                            ).toLocaleString()
-                                        }}
+                                        {{ formatDate(applicant.appliedAt) }}
                                     </p>
                                 </td>
                                 <td class="px-6 py-4">

@@ -8,7 +8,6 @@ import { HiMiniUserGroup } from "vue-icons-plus/hi2";
 import { useAuth } from "@/lib/authfirebase";
 
 const route = useRoute();
-
 const isOpen = ref(false);
 const isDesktop = ref(false);
 const { user } = useAuth();
@@ -143,7 +142,7 @@ const isActive = (path: string) => {
             </div>
 
             <!-- FOOTER -->
-            <div
+            <!-- <div
                 class="pt-6 border-t border-slate-200 darksss:border-slate-800"
             >
                 <div class="flex items-center gap-3">
@@ -161,7 +160,7 @@ const isActive = (path: string) => {
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </aside>
 

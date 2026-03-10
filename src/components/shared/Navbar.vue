@@ -174,7 +174,7 @@ onUnmounted(() => {
                                 <router-link
                                     :to="
                                         user?.role === 'admin'
-                                            ? '/admin/dashboard'
+                                            ? '/dashboard'
                                             : '/candidate/dashboard'
                                     "
                                     @click="closeProfileMenu"
@@ -332,7 +332,7 @@ onUnmounted(() => {
                         <router-link
                             :to="
                                 user?.role === 'admin'
-                                    ? '/admin/dashboard'
+                                    ? '/dashboard'
                                     : '/candidate/dashboard'
                             "
                             @click="closeMenu"

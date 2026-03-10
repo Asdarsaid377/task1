@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { applicationService } from "@/services/applications.service";
 import type {
     IApplication,
-    GetApplication,
     ApplicationStatus,
+    GetApplication,
 } from "@/types/ApplicationType";
 import type { TableColumn } from "@/components/table/BaseTable.vue";
 import BaseTable from "@/components/table/BaseTable.vue";
@@ -13,11 +13,14 @@ import EditCandidate from "@/components/modal/EditCandidate.vue";
 import { alertService } from "@/components/alert/notif";
 import TitleDashboard from "@/components/shared/TitleDashboard.vue";
 import { useDebounce } from "@/composable/useDebounce";
+import { useFetch } from "@/composable/useFetch";
+import { useTableFilter } from "@/composable/useFilterTable";
 
-const applications = ref<GetApplication[]>([]);
-const loading = ref(false);
+// const applications = ref<GetApplication[]>([]);
+
+// const loading = ref(false);
 const submitting = ref(false);
-const error = ref<string | null>(null);
+// const error = ref<string | null>(null);
 const successMessage = ref<string | null>(null);
 
 // Modal state
@@ -40,58 +43,29 @@ const filters = ref({
     status: "all",
 });
 
-const filteredUsers = computed(() => {
-    const query = debouncedSearch.value.toLowerCase();
-    return applications.value.filter((user) => {
-        const matchesSearch =
-            !query ||
-            user.candidateName?.toLowerCase().includes(query) ||
-            user.candidateEmail?.toLowerCase().includes(query) ||
-            user.job.title?.toLowerCase().includes(query);
-        const matchesRole =
-            filters.value.status === "all" ||
-            user.status === filters.value.status;
+// Reusable Fetch
+const { data, error, loading, execute } = useFetch<GetApplication[]>(
+    () => applicationService.fetchApplicationsWithJob(),
+    [],
+);
 
-        return matchesSearch && matchesRole;
-    });
-});
+const { filteredData: filteredApplications } = useTableFilter(
+    data,
+    debouncedSearch,
+    filters,
+    ["candidateName", "candidateEmail"],
+);
 
-/**
- * Fetch all applications with job details
- */
-const fetchApplications = async () => {
-    try {
-        loading.value = true;
-        error.value = null;
-        const data = await applicationService.fetchApplicationsWithJob();
-        applications.value = data;
-    } catch (error: any) {
-        console.error("❌ Error fetching applications:", error);
-        error.value = "Failed to fetch applications";
-    } finally {
-        loading.value = false;
-    }
-};
-
-/**
- * Open edit status modal
- */
 const handleEditStatusClick = (application: IApplication) => {
     selectedApplication.value = application;
     isEditStatusModalOpen.value = true;
 };
 
-/**
- * Close edit status modal
- */
 const handleEditStatusModalClose = () => {
     isEditStatusModalOpen.value = false;
     selectedApplication.value = undefined;
 };
 
-/**
- * Handle edit status form submit
- */
 const handleSubmitEditStatus = async (newStatus: ApplicationStatus) => {
     if (!selectedApplication.value?.id) {
         error.value = "Application ID is missing";
@@ -115,7 +89,7 @@ const handleSubmitEditStatus = async (newStatus: ApplicationStatus) => {
         handleEditStatusModalClose();
 
         // Refresh applications list
-        await fetchApplications();
+        await execute();
 
         // Clear success message after 3 seconds
         setTimeout(() => {
@@ -138,9 +112,6 @@ const handleResume = (url: string) => {
     }
 };
 
-/**
- * Delete application dengan confirmation
- */
 const handleDelete = async (application: IApplication) => {
     // Optional: Show confirmation dialog
     const confirmed = confirm(
@@ -158,7 +129,7 @@ const handleDelete = async (application: IApplication) => {
         successMessage.value = "Application deleted successfully!";
 
         // Refresh applications list
-        await fetchApplications();
+        await execute();
 
         // Clear success message after 3 seconds
         setTimeout(() => {
@@ -197,7 +168,7 @@ const dismissSuccess = () => {
 
 // Lifecycle
 onMounted(() => {
-    fetchApplications();
+    execute();
 });
 </script>
 
@@ -213,7 +184,7 @@ onMounted(() => {
                 class="text-zinc-900 darkssstext-zinc-100"
             />
             <button
-                @click="fetchApplications"
+                @click="execute"
                 class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
             >
                 <span class="material-symbols-outlined text-xl">refresh</span>
@@ -321,7 +292,11 @@ onMounted(() => {
         />
 
         <!-- Applications Table -->
-        <BaseTable :columns="columns" :items="filteredUsers" :loading="loading">
+        <BaseTable
+            :columns="columns"
+            :items="filteredApplications"
+            :loading="loading"
+        >
             <!-- Job Title -->
             <template #jobTitle="{ item }">
                 <span class="font-medium text-slate-900 darkssstext-white">
